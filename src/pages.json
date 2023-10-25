@@ -71,6 +71,16 @@
             },
             "navigationStyle": "custom"
           }
+        },
+        {
+          "path": "user/login",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarRightButton": {
+              "hide": true
+            },
+            "navigationStyle": "custom"
+          }
         }
       ]
     }

@@ -17,13 +17,28 @@ class SJRequest {
       },
       (error) => {
         console.log('全局请求拦截器失败')
-        return error
+        return Promise.reject(error)
       }
     )
     // 响应拦截器
     this.instance.interceptors.response.use(
-      (res) => {
+      (response) => {
+        const res = response.data
+
         console.log('全局响应拦截器成功')
+
+        if (res.code === -1005) {
+          uni.showToast({
+            title: '登录过期从新登录',
+            icon: 'error',
+            duration: 2000,
+          })
+          uni.navigateTo({
+            // url: '/pages-user/user/login',
+            url: '/pages-user/user/user',
+          })
+        }
+
         return res
       },
       (error) => {
