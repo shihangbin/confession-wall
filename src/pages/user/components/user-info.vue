@@ -54,7 +54,7 @@
 
 <style lang="scss" scoped>
   .user-info {
-    width: 100%;
+    // width: 100%;
     height: 220rpx;
     background-color: #fff;
     border-radius: 20rpx;

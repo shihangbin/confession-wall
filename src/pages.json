@@ -73,13 +73,17 @@
           }
         },
         {
-          "path": "user/login",
+          "path": "login/login",
           "style": {
             "enablePullDownRefresh": false,
-            "navigationBarRightButton": {
-              "hide": true
-            },
-            "navigationStyle": "custom"
+            "navigationBarTitleText": "登录"
+          }
+        },
+        {
+          "path": "sign-up/sign-up",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarTitleText": "注册"
           }
         }
       ]
@@ -95,6 +99,14 @@
       "packages": ["pages-study"]
     },
     "pages-user/user/user": {
+      "network": "all",
+      "packages": ["pages-user"]
+    },
+    "pages-user/login/login": {
+      "network": "all",
+      "packages": ["pages-user"]
+    },
+    "pages-user/sign-up/sign-up": {
       "network": "all",
       "packages": ["pages-user"]
     }

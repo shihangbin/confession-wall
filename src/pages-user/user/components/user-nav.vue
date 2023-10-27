@@ -12,7 +12,8 @@
     messages.value += infos[key] + '/'
   }
 
-  const menu = uni.getMenuButtonBoundingClientRect()
+  const menu = uni.getSystemInfoSync().statusBarHeight
+
   const navLeftBtn = () => {
     uni.navigateBack()
   }
@@ -37,7 +38,7 @@
   <div class="nav">
     <div
       class="nav-left-btn"
-      :style="{ paddingTop: menu.top + 'px' }">
+      :style="{ paddingTop: menu + 'px' }">
       <u-icon
         name="arrow-left"
         color="$u-main-color"

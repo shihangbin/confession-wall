@@ -34,8 +34,8 @@ class SJRequest {
             duration: 2000,
           })
           uni.navigateTo({
-            // url: '/pages-user/user/login',
-            url: '/pages-user/user/user',
+            url: '/pages-user/login/login',
+            // url: '/pages-user/user/user',
           })
         }
 

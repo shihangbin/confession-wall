@@ -14,12 +14,10 @@
 
 <style scoped lang="scss">
   .user {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
     background-color: $u-info-light;
-    min-height: calc(100vh - var(--window-top));
     padding: 20rpx;
     box-sizing: border-box;
+    width: 100%;
+    min-height: calc(100vh - var(--window-top));
   }
 </style>
