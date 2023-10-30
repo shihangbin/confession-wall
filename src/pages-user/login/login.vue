@@ -1,5 +1,16 @@
 <script lang="ts" setup>
   // import { uni } from '@dcloudio/uni-h5'
+  import { ref } from 'vue'
+  import { login } from '@/service/modules/login'
+  import { userLogin } from '@/store/login'
+  import { storeToRefs } from 'pinia'
+
+  const loginStore = userLogin()
+  const { token }: any = storeToRefs(loginStore)
+  console.log(token)
+
+  const username = ref('')
+  const password = ref('')
 
   const toSignUP = () => {
     uni.navigateTo({
@@ -7,10 +18,31 @@
     })
   }
 
-  const loginBtn = () => {
-    uni.navigateBack({
-      delta: 1,
-    })
+  const loginBtn = async () => {
+    const res: any = await login(username.value, password.value)
+
+    if (res.code === 0) {
+      if (typeof sessionStorage !== 'undefined') {
+        // 在浏览器环境中使用 sessionStorage
+        sessionStorage.setItem('token', res.data.token)
+        token.value = sessionStorage.getItem('token')
+      } else {
+        // 在小程序环境中使用小程序的本地存储方法
+        uni.setStorageSync('token', res.data.token)
+        token.value = uni.getStorageSync('token')
+      }
+
+      uni.showLoading({
+        title: '加载中',
+      })
+
+      setTimeout(function () {
+        uni.hideLoading()
+        uni.switchTab({
+          url: '/pages/index/index',
+        })
+      }, 1000)
+    }
   }
 </script>
 
@@ -30,6 +62,7 @@
           type="text"
           shape="circle"
           placeholder="请输入账号"
+          v-model="username"
           border="surround"
           prefixIcon="account"
           prefixIconStyle="font-size: 22px;color: #909399"
@@ -41,6 +74,7 @@
           type="password"
           shape="circle"
           placeholder="请输入密码"
+          v-model="password"
           border="surround"
           clearable
           prefixIcon="lock"

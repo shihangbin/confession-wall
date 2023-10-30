@@ -1,4 +1,35 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+  import { userSignUp } from '@/service/modules/sign-up'
+
+  import { ref } from 'vue'
+  import { showToastError } from '@/utils/handle.error'
+
+  const username = ref('')
+  const password1 = ref('')
+  const password2 = ref('')
+
+  const signUp = () => {
+    if (!password1.value || !password2.value) {
+      showToastError('none', '用户名或密码不能为空!')
+      return
+    }
+    if (password1.value !== password2.value) {
+      showToastError('none', '密码不一致!')
+      return
+    }
+    userSignUp(username.value, password2.value).then((res: any) => {
+      if (res.code === 0) {
+        uni.navigateTo({
+          url: '/pages-user/login/login',
+          // url: '/pages-user/user/user',
+        })
+      }
+      if (res.code === -1002) {
+        showToastError('none', '用户存在请换一个用户名!')
+      }
+    })
+  }
+</script>
 
 <template>
   <div class="sign-up">
@@ -18,6 +49,7 @@
           placeholder="请输入账号"
           border="surround"
           prefixIcon="account"
+          v-model="username"
           prefixIconStyle="font-size: 22px;color: #909399"
           clearable>
         </up-input>
@@ -28,6 +60,7 @@
             type="password"
             shape="circle"
             placeholder="请输入密码"
+            v-model="password1"
             border="surround"
             clearable
             prefixIcon="lock"
@@ -40,6 +73,7 @@
             type="password"
             shape="circle"
             placeholder="确认密码"
+            v-model="password2"
             border="surround"
             clearable
             prefixIcon="lock-fill"
@@ -52,7 +86,8 @@
         <u-button
           text="注册"
           type="primary"
-          shape="circle">
+          shape="circle"
+          @click="signUp">
         </u-button>
       </div>
     </div>

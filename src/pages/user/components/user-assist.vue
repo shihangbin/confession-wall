@@ -4,12 +4,21 @@
       url: '/pages-user/sign-up/sign-up',
     })
   }
+  const toLogin = () => {
+    uni.navigateTo({
+      url: '/pages-user/login/login',
+    })
+  }
 </script>
 
 <template>
   <div class="user-assist">
     <div class="user-left">左边</div>
-    <div class="user-center">中间</div>
+    <div
+      class="user-center"
+      @click="toLogin">
+      中间
+    </div>
     <div
       class="user-right"
       @click="toSignUP">
