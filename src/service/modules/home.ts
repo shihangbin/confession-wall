@@ -5,3 +5,9 @@ export const getArticles = () => {
     url: '/article',
   })
 }
+
+export const getArticleItem = (id: number) => {
+  return sjRequest.get({
+    url: `/article/${id}`,
+  })
+}

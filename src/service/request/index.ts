@@ -42,7 +42,7 @@ class SJRequest {
 
         console.log('全局响应拦截器成功')
 
-        if (res.code === -1005 || !token.value) {
+        if (res.code === -1005) {
           showToastError('none', '登录过期从新登录!')
 
           uni.navigateTo({

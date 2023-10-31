@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
-  import searchTabs from '@/components/search-tabs.vue'
-  import contentBlock from '@/components/content-block.vue'
+  import searchTabs from './components/search-tabs.vue'
+  import contentBlock from './components/content-block.vue'
   import { getArticles } from '@/service/modules/home'
 
   const articleData: any = ref(null)
@@ -19,8 +19,8 @@
 
     <template
       v-for="(item, index) in articleData"
-      :key="index">
-      <content-block></content-block>
+      :key="item.id">
+      <content-block :itemArticle="item"></content-block>
     </template>
   </div>
 </template>
