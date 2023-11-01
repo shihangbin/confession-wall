@@ -36,11 +36,13 @@
       <div class="top-btn">按钮</div>
     </div>
     <div class="content-center">
-      <div
-        class="center-text"
-        @click="toArticle(props.itemArticle.id)">
-        {{ props.itemArticle.content }}
-      </div>
+      <up-text
+        @click="toArticle(props.itemArticle.id)"
+        :lines="2"
+        size="32"
+        lineHeight="50"
+        :text="props.itemArticle.content">
+      </up-text>
       <scroll-view
         class="scroll-view"
         scroll-x="true">
@@ -101,6 +103,8 @@
     .content-center {
       width: 100%;
       margin: 15rpx 0;
+      text-align: justify;
+      letter-spacing: 5rpx;
       // background-color: pink;
       .scroll-view {
         white-space: nowrap;

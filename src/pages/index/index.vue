@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted } from 'vue'
   import searchTabs from './components/search-tabs.vue'
-  import contentBlock from './components/content-block.vue'
+  import contentBlock from './components/content-item.vue'
   import { getArticles } from '@/service/modules/home'
 
   const articleData: any = ref(null)
