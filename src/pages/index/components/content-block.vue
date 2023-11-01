@@ -5,13 +5,17 @@
       default: () => {},
     },
   })
-  // console.log(props.itemArticle)
 
   const previewImage = (index: number, itemArr: any) => {
-    console.log(index, itemArr)
     uni.previewImage({
       urls: itemArr,
       current: index,
+    })
+  }
+
+  const toArticle = (id: string) => {
+    uni.navigateTo({
+      url: `/pages/index/pages/article?id=${id}`,
     })
   }
 </script>
@@ -32,7 +36,11 @@
       <div class="top-btn">按钮</div>
     </div>
     <div class="content-center">
-      <div class="center-text">{{ props.itemArticle.content }}</div>
+      <div
+        class="center-text"
+        @click="toArticle(props.itemArticle.id)">
+        {{ props.itemArticle.content }}
+      </div>
       <scroll-view
         class="scroll-view"
         scroll-x="true">
@@ -75,8 +83,8 @@
         width: 100rpx;
         height: 100rpx;
         // background: pink;
-        border-radius: 10rpx;
-        border: 2rpx solid #000;
+        border-radius: 8rpx;
+        border: 5rpx solid #000;
         overflow: hidden;
         .image {
           width: 100%;

@@ -29,5 +29,7 @@
   .index {
     min-height: calc(100vh - var(--window-top));
     background-color: $u-bg-color;
+    // margin-bottom: 50rpx;
+    padding-bottom: 100rpx;
   }
 </style>

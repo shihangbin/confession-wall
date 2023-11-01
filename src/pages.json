@@ -16,6 +16,14 @@
       }
     },
     {
+      "path": "pages/index/pages/article",
+      "style": {
+        "navigationBarTitleText": "详情",
+        "navigationBarBackgroundColor": "#fff",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
       "path": "pages/study/study",
       "style": {
         "navigationBarTitleText": "学习区",
@@ -33,32 +41,6 @@
     }
   ],
   "subPackages": [
-    {
-      "root": "pages-index",
-      "pages": [
-        {
-          "path": "index/index",
-          "style": {
-            "navigationBarTitleText": "表白区",
-            "navigationBarBackgroundColor": "#fff",
-            "enablePullDownRefresh": false
-          }
-        }
-      ]
-    },
-    {
-      "root": "pages-study",
-      "pages": [
-        {
-          "path": "study/study",
-          "style": {
-            "navigationBarTitleText": "学习区",
-            "navigationBarBackgroundColor": "#fff",
-            "enablePullDownRefresh": false
-          }
-        }
-      ]
-    },
     {
       "root": "pages-user",
       "pages": [
@@ -90,14 +72,6 @@
     }
   ],
   "preloadRule": {
-    "pages-index/index/index": {
-      "network": "all",
-      "packages": ["pages-index"]
-    },
-    "pages-study/study/study": {
-      "network": "all",
-      "packages": ["pages-study"]
-    },
     "pages-user/user/user": {
       "network": "all",
       "packages": ["pages-user"]
