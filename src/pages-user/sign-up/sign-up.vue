@@ -1,7 +1,6 @@
 <script lang="ts" setup>
-  import { userSignUp } from '@/service/modules/sign-up'
-
   import { ref } from 'vue'
+  import { userSignUp } from '@/service/modules/sign-up'
   import { showToastError } from '@/utils/handle.error'
 
   const username = ref('')
@@ -21,7 +20,6 @@
       if (res.code === 0) {
         uni.navigateTo({
           url: '/pages-user/login/login',
-          // url: '/pages-user/user/user',
         })
       }
       if (res.code === -1002) {

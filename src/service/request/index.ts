@@ -3,11 +3,11 @@ import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { showToastError } from '@/utils/handle.error'
-import { userLogin } from '@/store/login'
+import { useLoginStore } from '@/store/login'
 import { storeToRefs } from 'pinia'
 
-const loginStore = userLogin()
-const { token }: any = storeToRefs(loginStore)
+const loginStore = useLoginStore()
+const { token } = storeToRefs(loginStore)
 
 class SJRequest {
   instance: AxiosInstance

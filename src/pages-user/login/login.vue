@@ -1,16 +1,9 @@
 <script lang="ts" setup>
-  // import { uni } from '@dcloudio/uni-h5'
   import { ref } from 'vue'
-  import { login } from '@/service/modules/login'
-  import { userLogin } from '@/store/login'
-  import { storeToRefs } from 'pinia'
+  import { loginHooks } from '@/hooks/login'
 
-  const loginStore = userLogin()
-  const { token }: any = storeToRefs(loginStore)
-  console.log(token)
-
-  const username = ref('')
-  const password = ref('')
+  const username = ref<string>('')
+  const password = ref<string>('')
 
   const toSignUP = () => {
     uni.navigateTo({
@@ -18,31 +11,8 @@
     })
   }
 
-  const loginBtn = async () => {
-    const res: any = await login(username.value, password.value)
-
-    if (res.code === 0) {
-      if (typeof sessionStorage !== 'undefined') {
-        // 在浏览器环境中使用 sessionStorage
-        sessionStorage.setItem('token', res.data.token)
-        token.value = sessionStorage.getItem('token')
-      } else {
-        // 在小程序环境中使用小程序的本地存储方法
-        uni.setStorageSync('token', res.data.token)
-        token.value = uni.getStorageSync('token')
-      }
-
-      uni.showLoading({
-        title: '加载中',
-      })
-
-      setTimeout(function () {
-        uni.hideLoading()
-        uni.switchTab({
-          url: '/pages/index/index',
-        })
-      }, 1000)
-    }
+  const loginBtn = () => {
+    loginHooks(username.value, password.value)
   }
 </script>
 

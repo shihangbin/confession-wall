@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { storeToRefs } from 'pinia'
   import { onLoad } from '@dcloudio/uni-app'
-  import { getArticleItem } from '../../../service/modules/home'
+  import { useArticleStore } from '../../../store/article'
 
-  const articleData: any = ref(null)
+  const articleStore = useArticleStore()
+  const { articleData } = storeToRefs(articleStore)
 
   onLoad(async (option: any) => {
-    const res = await getArticleItem(option.id)
-    articleData.value = res.data
+    articleStore.getArticleListAction(option.id)
   })
 
   const previewImage = (index: number, itemArr: any) => {
@@ -39,7 +39,7 @@
         </up-text>
       </div>
       <up-image
-        v-if="articleData?.image_urls.length == 1"
+        v-if="articleData?.image_urls?.length == 1"
         :show-loading="true"
         :src="articleData?.image_urls"
         width="710"
@@ -48,11 +48,10 @@
         @click="previewImage(1, articleData?.image_urls)">
       </up-image>
       <u-album
-        v-else-if="articleData?.image_urls.length > 1"
+        v-else-if="articleData?.image_urls?.length > 1"
         :urls="articleData?.image_urls"
         rowCount="3"
         maxCount="9"
-        space="7"
         multipleSize="230">
       </u-album>
     </div>
@@ -62,7 +61,6 @@
         <div class="avatar">头像</div>
         <div class="messages">
           <div class="user">昵称</div>
-          <!-- <div class="content">开发中...</div> -->
           <div class="content">
             <up-text
               size="32"
@@ -150,8 +148,6 @@
           .user {
             color: $u-tips-color;
             margin-bottom: 10rpx;
-          }
-          .content {
           }
         }
       }
