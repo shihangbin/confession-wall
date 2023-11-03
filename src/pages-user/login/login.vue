@@ -17,6 +17,7 @@
 
   const loginBtn = () => {
     loginStore.loginAction(username.value, password.value)
+
     uni.showLoading({
       title: '加载中',
     })
