@@ -2,9 +2,14 @@
   import { ref } from 'vue'
   import { useUserStore } from '@/store/user'
   import { storeToRefs } from 'pinia'
+  import { onLoad } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
   const { userInfo } = storeToRefs(userStore)
+
+  onLoad(async () => {
+    await userStore.getUserAction()
+  })
 
   const infos: any = Object.values(userInfo.value.infos)
   let messages = ref<string>('')

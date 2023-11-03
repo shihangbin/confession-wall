@@ -1,6 +1,10 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
-  import { loginHooks } from '@/hooks/login'
+  import { storeToRefs } from 'pinia'
+  import { useLoginStore } from '@/store/login'
+
+  const loginStore = useLoginStore()
+  const { token, code } = storeToRefs(loginStore)
 
   const username = ref<string>('')
   const password = ref<string>('')
@@ -12,7 +16,16 @@
   }
 
   const loginBtn = () => {
-    loginHooks(username.value, password.value)
+    loginStore.loginAction(username.value, password.value)
+    uni.showLoading({
+      title: '加载中',
+    })
+    setTimeout(function () {
+      uni.hideLoading()
+      uni.switchTab({
+        url: '/pages/index/index',
+      })
+    }, 1000)
   }
 </script>
 

@@ -9,3 +9,9 @@ export const login = (user: string, pwd: string) => {
     },
   })
 }
+
+export const user = () => {
+  return sjRequest.get({
+    url: `/login/user`,
+  })
+}

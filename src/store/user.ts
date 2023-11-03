@@ -1,7 +1,5 @@
-/**
- * @description 用户信息数据持久化
- */
 import { defineStore } from 'pinia'
+import { user } from '@/service/modules/login'
 
 export const useUserStore = defineStore('user', {
   state() {
@@ -24,5 +22,17 @@ export const useUserStore = defineStore('user', {
       },
     }
   },
-  actions: {},
+  actions: {
+    async getUserAction() {
+      const userResult = await user()
+      this.userInfo.name = userResult?.data?.username
+      this.userInfo.avatarUrl = userResult?.data?.avatar_path
+      this.userInfo.wxqq = userResult?.data?.wechat_or_qq
+      this.userInfo.infos.age = userResult?.data?.age
+      this.userInfo.infos.sex = userResult?.data?.gender
+      this.userInfo.infos.field = userResult?.data?.major
+      this.userInfo.infos.classes = userResult?.data?.class
+      // this.userInfo.isLogin = userResult.data.is_muted
+    },
+  },
 })

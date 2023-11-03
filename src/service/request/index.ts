@@ -2,12 +2,6 @@ import axios from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
 import type { AxiosInstance, AxiosRequestConfig } from 'axios'
-import { showToastError } from '@/utils/handle.error'
-import { useLoginStore } from '@/store/login'
-import { storeToRefs } from 'pinia'
-
-const loginStore = useLoginStore()
-const { token } = storeToRefs(loginStore)
 
 class SJRequest {
   instance: AxiosInstance
@@ -29,27 +23,10 @@ class SJRequest {
 
     // 响应拦截器
     this.instance.interceptors.response.use(
-      (response) => {
+      async (response) => {
         const res = response.data
 
-        if (typeof sessionStorage !== 'undefined') {
-          // 在浏览器环境中使用 sessionStorage
-          token.value = sessionStorage.getItem('token')
-        } else {
-          // 在小程序环境中使用小程序的本地存储方法
-          token.value = uni.getStorageSync('token')
-        }
-
         console.log('全局响应拦截器成功')
-
-        if (res.code === -1005) {
-          showToastError('none', '登录过期从新登录!')
-
-          uni.navigateTo({
-            url: '/pages-user/login/login',
-            // url: '/pages-user/user/user',
-          })
-        }
 
         return res
       },
@@ -69,14 +46,12 @@ class SJRequest {
     return this.request({
       ...config,
       method: 'post',
-      headers: { Authorization: `Bearer ${token.value}` },
     })
   }
   get(config: AxiosRequestConfig) {
     return this.request({
       ...config,
       method: 'get',
-      headers: { Authorization: `Bearer ${token.value}` },
     })
   }
 }
