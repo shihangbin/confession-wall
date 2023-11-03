@@ -22,7 +22,7 @@ export const login = (username: string, password: string) => {
     },
   })
 }
-export const userInfo = () => {
+export const getUserInfo = () => {
   // 发送请求的示例
   return request({
     url: '/login/user',

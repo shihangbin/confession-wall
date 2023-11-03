@@ -1,15 +1,15 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import { ref } from 'vue'
   import searchTabs from './components/search-tabs.vue'
   import contentBlock from './components/content-item.vue'
   import { getArticles } from '@/api/home'
+  import { onShow } from '@dcloudio/uni-app'
 
   const articleData: any = ref(null)
-
-  onMounted(async () => {
+  onShow(async () => {
     // 在组件挂载后进行异步操作，例如数据加载
-    const a: any = await getArticles()
-    articleData.value = a.data
+    const res: any = await getArticles()
+    articleData.value = res.data
   })
 </script>
 <template>
