@@ -1,14 +1,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
-  import { storeToRefs } from 'pinia'
   import { useLoginStore } from '@/store/login'
-  import { useUserStore } from '@/store/user'
-
-  const userStore = useUserStore()
-  const { userInfo } = storeToRefs(userStore)
-
-  const loginStore = useLoginStore()
-  const { token, code } = storeToRefs(loginStore)
+  import { login } from '@/api/user'
 
   const username = ref<string>('')
   const password = ref<string>('')
@@ -19,18 +12,32 @@
     })
   }
 
-  const loginBtn = () => {
-    loginStore.loginAction(username.value, password.value)
-    userInfo.value.isLogin = true
-    uni.showLoading({
-      title: '加载中',
-    })
-    setTimeout(function () {
-      uni.hideLoading()
-      uni.switchTab({
-        url: '/pages/index/index',
+  const loginBtn = async () => {
+    const loginResult: any = await login(username.value, password.value)
+
+    // 存储数据到本地存储
+    const token = loginResult.data.token
+    uni.setStorageSync('token', token)
+    if (token) {
+      uni.showLoading({
+        title: '加载中',
       })
-    }, 1000)
+      setTimeout(function () {
+        uni.hideLoading()
+        uni.switchTab({
+          url: '/pages/index/index',
+        })
+      }, 1000)
+    }
+  }
+
+  const show = ref(false)
+  const open = () => {
+    // console.log('open');
+  }
+  const close = () => {
+    show.value = false
+    // console.log('close');
   }
 </script>
 
@@ -75,7 +82,8 @@
               text="忘记密码"
               plain
               type="primary"
-              shape="circle">
+              shape="circle"
+              @click="show = true">
             </u-button>
           </div>
           <div class="sign-up">
@@ -98,6 +106,18 @@
         </div>
       </div>
     </div>
+    <u-popup
+      :show="show"
+      mode="center"
+      @close="close"
+      @open="open">
+      <div class="wx">
+        <img
+          class="wx-img"
+          src="https://img.xbin.cn/school-wall/article_images/2023/11/03/c3aee3b17fe762b72bb745c1c"
+          alt="" />
+      </div>
+    </u-popup>
   </div>
 </template>
 
@@ -129,6 +149,14 @@
         .sign-up {
           margin-right: 20rpx;
         }
+      }
+    }
+    .wx {
+      width: 500rpx;
+      height: 700rpx;
+      .wx-img {
+        width: 100%;
+        height: 100%;
       }
     }
   }
