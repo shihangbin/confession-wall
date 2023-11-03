@@ -1,6 +1,6 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
-  import { userSignUp } from '@/service/modules/sign-up'
+  import { signUP } from '@/api/user'
   import { showToastError } from '@/utils/handle.error'
 
   const username = ref('')
@@ -16,7 +16,7 @@
       showToastError('none', '密码不一致!')
       return
     }
-    userSignUp(username.value, password2.value).then((res: any) => {
+    signUP(username.value, password2.value).then((res: any) => {
       if (res.code === 0) {
         uni.navigateTo({
           url: '/pages-user/login/login',

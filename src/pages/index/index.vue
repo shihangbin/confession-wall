@@ -2,15 +2,14 @@
   import { ref, onMounted } from 'vue'
   import searchTabs from './components/search-tabs.vue'
   import contentBlock from './components/content-item.vue'
-  import { getArticles } from '@/service/modules/home'
+  import { getArticles } from '@/api/home'
 
   const articleData: any = ref(null)
 
   onMounted(async () => {
     // 在组件挂载后进行异步操作，例如数据加载
-    articleData.value = await getArticles().then((res) => {
-      return res.data
-    }) // 示例中的数据加载函数
+    const a: any = await getArticles()
+    articleData.value = a.data
   })
 </script>
 <template>

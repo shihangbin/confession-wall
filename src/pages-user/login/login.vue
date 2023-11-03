@@ -2,6 +2,10 @@
   import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useLoginStore } from '@/store/login'
+  import { useUserStore } from '@/store/user'
+
+  const userStore = useUserStore()
+  const { userInfo } = storeToRefs(userStore)
 
   const loginStore = useLoginStore()
   const { token, code } = storeToRefs(loginStore)
@@ -17,7 +21,7 @@
 
   const loginBtn = () => {
     loginStore.loginAction(username.value, password.value)
-
+    userInfo.value.isLogin = true
     uni.showLoading({
       title: '加载中',
     })

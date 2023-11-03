@@ -1,13 +1,27 @@
 <script lang="ts" setup>
   import { storeToRefs } from 'pinia'
   import { useUserStore } from '@/store/user'
+  import { onLoad } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
   const { userInfo } = storeToRefs(userStore)
 
+  onLoad(() => {
+    userStore.getUserAction()
+  })
   const goUser = () => {
+    if (userInfo.value.isLogin) {
+      uni.navigateTo({
+        url: '/pages-user/user/user',
+      })
+    } else if (userInfo.value.isLogin) {
+      login()
+    }
+  }
+
+  const login = () => {
     uni.navigateTo({
-      url: '/pages-user/user/user',
+      url: '/pages-user/login/login',
     })
   }
 </script>
@@ -46,7 +60,7 @@
         </span>
       </template>
       <template v-else>
-        <span>点击登录</span>
+        <span @click="login">点击登录</span>
       </template>
     </div>
   </div>

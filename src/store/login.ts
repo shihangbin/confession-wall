@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { login } from '@/service/modules/login'
+import { login } from '@/api/user'
 
 interface ILoginState {
   token: any

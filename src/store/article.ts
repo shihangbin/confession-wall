@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getArticleItem } from '@/service/modules/home'
+import { getArticleItem } from '@/api/home'
 
 interface ILoginState {
   articleData: {
@@ -17,8 +17,8 @@ export const useArticleStore = defineStore('article', {
   }),
   actions: {
     async getArticleListAction(id: number) {
-      const articleResult = await getArticleItem(id)
-      this.articleData = articleResult.data
+      const articleResult: any = await getArticleItem(id)
+      this.articleData = articleResult.data[0]
     },
   },
 })

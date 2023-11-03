@@ -7,8 +7,8 @@
   const userStore = useUserStore()
   const { userInfo } = storeToRefs(userStore)
 
-  onLoad(async () => {
-    await userStore.getUserAction()
+  onLoad(() => {
+    userStore.getUserAction()
   })
 
   const infos: any = Object.values(userInfo.value.infos)
