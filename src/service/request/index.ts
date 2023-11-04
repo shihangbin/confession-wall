@@ -1,7 +1,9 @@
 import axios from 'axios'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import mpAdapter from 'axios-miniprogram-adapter'
 axios.defaults.adapter = mpAdapter
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
+import { showToastError } from '@/utils/handle.error'
+import { WHITE_API } from '@/service/config/index'
 
 class SJRequest {
   instance: AxiosInstance
@@ -11,12 +13,18 @@ class SJRequest {
 
     // 请求拦截器
     this.instance.interceptors.request.use(
-      (config) => {
-        console.log('全局请求拦截器成功')
+      (config: any) => {
+        const url: any = config.url
+        const token = uni.getStorageSync('token')
+
+        if (WHITE_API.indexOf(url) == -1 && token) {
+          config.headers['Authorization'] = `Bearer ${token}`
+        }
+        console.log(config)
+
         return config
       },
       (error) => {
-        console.log('全局请求拦截器失败')
         return Promise.reject(error)
       }
     )
@@ -25,14 +33,23 @@ class SJRequest {
     this.instance.interceptors.response.use(
       async (response) => {
         const res = response.data
+        const code = response.data.code || 0
+        const msg = response.data.message || '未知错误'
+        const token = uni.getStorageSync('token')
 
-        console.log('全局响应拦截器成功')
+        if (code === -1005 && token) {
+          showToastError('none', msg)
+          setTimeout(() => {
+            uni.navigateTo({
+              url: '/pages-user/login/login',
+            })
+          }, 2000)
+        }
 
         return res
       },
       (error) => {
-        console.log('全局响应拦截器失败')
-        return error
+        return Promise.reject(error)
       }
     )
   }

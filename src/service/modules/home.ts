@@ -6,7 +6,7 @@ export const getArticles = () => {
   })
 }
 
-export const getArticleItem = (id: number) => {
+export const getArticleItem = (id: string) => {
   return sjRequest.get({
     url: `/article/${id}`,
   })
