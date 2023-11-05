@@ -1,13 +1,17 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
-  import { userSignUp } from '@/service/modules/sign-up'
   import { showToastError } from '@/utils/handle.error'
+  import { useSignUpStore } from '@/store/sign-up'
+  import { storeToRefs } from 'pinia'
+
+  const signUpStore = useSignUpStore()
+  const { code } = storeToRefs(signUpStore)
 
   const username = ref('')
   const password1 = ref('')
   const password2 = ref('')
 
-  const signUp = () => {
+  const signUp = async () => {
     if (!password1.value || !password2.value) {
       showToastError('none', '用户名或密码不能为空!')
       return
@@ -16,16 +20,15 @@
       showToastError('none', '密码不一致!')
       return
     }
-    userSignUp(username.value, password2.value).then((res: any) => {
-      if (res.code === 0) {
-        uni.navigateTo({
-          url: '/pages-user/login/login',
-        })
-      }
-      if (res.code === -1002) {
-        showToastError('none', '用户存在请换一个用户名!')
-      }
-    })
+    await signUpStore.signUpAction(username.value, password2.value)
+    if (code.value === 0) {
+      uni.navigateTo({
+        url: '/pages-user/login/login',
+      })
+    }
+    if (code.value === -1002) {
+      showToastError('none', '用户存在请换一个用户名!')
+    }
   }
 </script>
 

@@ -1,6 +1,6 @@
 import sjRequest from '..'
 
-export const userSignUp = (user: string, pwd: string) => {
+export const signUp = (user: string, pwd: string) => {
   return sjRequest.post({
     url: '/user',
     data: {

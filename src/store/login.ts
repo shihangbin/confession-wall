@@ -1,24 +1,20 @@
 import { defineStore } from 'pinia'
 import { login } from '@/service/modules/login'
 
-interface ILoginState {
-  token: any
+interface ILogin {
   code: number
+  token: string
 }
 export const useLoginStore = defineStore('login', {
-  state: (): ILoginState => ({
-    token: '',
+  state: (): ILogin => ({
     code: 0,
+    token: '',
   }),
   actions: {
     async loginAction(username: string, password: string) {
       const loginResult: any = await login(username, password)
-      this.token = loginResult.data.token
       this.code = loginResult.code
-
-      // 存储数据到本地存储
-      const token = loginResult.data.token
-      uni.setStorageSync('token', token)
+      this.token = loginResult.data.token
     },
   },
 })

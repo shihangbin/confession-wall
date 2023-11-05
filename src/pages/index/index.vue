@@ -2,15 +2,14 @@
   import { ref, onMounted } from 'vue'
   import searchTabs from './components/search-tabs.vue'
   import contentBlock from './components/content-item.vue'
-  import { getArticles } from '@/service/modules/home'
+  import { useArticleStore } from '@/store/article'
+  import { storeToRefs } from 'pinia'
 
-  const articleData: any = ref(null)
+  const articleStore = useArticleStore()
+  const { articleList } = storeToRefs(articleStore)
 
   onMounted(async () => {
-    // 在组件挂载后进行异步操作，例如数据加载
-    articleData.value = await getArticles().then((res: any) => {
-      return res.data
-    })
+    await articleStore.getArticleListAction()
   })
 </script>
 <template>
@@ -18,7 +17,7 @@
     <search-tabs></search-tabs>
 
     <template
-      v-for="(item, index) in articleData"
+      v-for="(item, index) in articleList"
       :key="item.id">
       <content-block :itemArticle="item"></content-block>
     </template>

@@ -4,10 +4,10 @@
   import { useArticleStore } from '../../../store/article'
 
   const articleStore = useArticleStore()
-  const { articleData } = storeToRefs(articleStore)
+  const { articleItem } = storeToRefs(articleStore)
 
   onLoad(async (option: any) => {
-    await articleStore.getArticleListAction(option.id)
+    await articleStore.getArticleItemAction(option.id)
   })
 
   const previewImage = (index: number, itemArr: any) => {
@@ -24,32 +24,32 @@
       <div class="user">
         <image
           class="avatar"
-          :src="articleData?.user?.avatarURL">
+          :src="articleItem?.user?.avatarURL">
         </image>
         <div class="info">
-          <div class="name">{{ articleData?.user?.username }}</div>
-          <div>{{ articleData?.publication_date }}</div>
+          <div class="name">{{ articleItem?.user?.username }}</div>
+          <div>{{ articleItem?.publication_date }}</div>
         </div>
       </div>
       <div class="content">
         <up-text
           size="32"
           lineHeight="50"
-          :text="articleData?.content">
+          :text="articleItem?.content">
         </up-text>
       </div>
       <up-image
-        v-if="articleData?.image_urls?.length == 1"
+        v-if="articleItem?.image_urls?.length == 1"
         :show-loading="true"
-        :src="articleData?.image_urls"
+        :src="articleItem?.image_urls"
         width="710"
         height="500"
         mode="aspectFill"
-        @click="previewImage(1, articleData?.image_urls)">
+        @click="previewImage(1, articleItem?.image_urls)">
       </up-image>
       <u-album
-        v-else-if="articleData?.image_urls?.length > 1"
-        :urls="articleData?.image_urls"
+        v-else-if="articleItem?.image_urls?.length > 1"
+        :urls="articleItem?.image_urls"
         rowCount="3"
         maxCount="9"
         multipleSize="230">

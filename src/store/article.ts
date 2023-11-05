@@ -1,15 +1,21 @@
 import { defineStore } from 'pinia'
-import { getArticleItem } from '@/service/modules/home'
+import { getArticleItem, getArticleList } from '@/service/modules/home'
 
 export const useArticleStore = defineStore('article', {
   state: (): any => ({
-    articleData: {},
+    articleList: {},
+    articleItem: {},
   }),
 
   actions: {
-    async getArticleListAction(id: string) {
-      const articleResult: any = await getArticleItem(id)
-      this.articleData = articleResult.data
+    async getArticleListAction() {
+      const articleList: any = await getArticleList()
+      this.articleList = articleList.data
+    },
+
+    async getArticleItemAction(id: string) {
+      const articleItem: any = await getArticleItem(id)
+      this.articleItem = articleItem.data
     },
   },
 })

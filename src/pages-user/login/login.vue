@@ -15,17 +15,23 @@
     })
   }
 
-  const loginBtn = () => {
-    loginStore.loginAction(username.value, password.value)
-    uni.showLoading({
-      title: '加载中',
-    })
-    setTimeout(function () {
-      uni.hideLoading()
-      uni.switchTab({
-        url: '/pages/index/index',
+  const loginBtn = async () => {
+    await loginStore.loginAction(username.value, password.value)
+
+    if (token.value && code.value === 0) {
+      uni.showLoading({
+        title: '加载中',
       })
-    }, 1000)
+      // 存储数据到本地存储
+      uni.setStorageSync('token', token.value)
+
+      setTimeout(function () {
+        uni.hideLoading()
+        uni.switchTab({
+          url: '/pages/index/index',
+        })
+      }, 1000)
+    }
   }
 </script>
 

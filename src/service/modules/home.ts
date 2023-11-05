@@ -1,6 +1,6 @@
 import sjRequest from '..'
 
-export const getArticles = () => {
+export const getArticleList = () => {
   return sjRequest.get({
     url: '/article',
   })
