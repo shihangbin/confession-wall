@@ -8,7 +8,7 @@ export const useArticleStore = defineStore('article', {
 
   actions: {
     async getArticleListAction(id: string) {
-      const articleResult = await getArticleItem(id)
+      const articleResult: any = await getArticleItem(id)
       this.articleData = articleResult.data
     },
   },

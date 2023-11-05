@@ -8,9 +8,9 @@
 
   onMounted(async () => {
     // 在组件挂载后进行异步操作，例如数据加载
-    articleData.value = await getArticles().then((res) => {
+    articleData.value = await getArticles().then((res: any) => {
       return res.data
-    }) // 示例中的数据加载函数
+    })
   })
 </script>
 <template>

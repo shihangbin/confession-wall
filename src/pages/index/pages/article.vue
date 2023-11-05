@@ -7,7 +7,7 @@
   const { articleData } = storeToRefs(articleStore)
 
   onLoad(async (option: any) => {
-    articleStore.getArticleListAction(option.id)
+    await articleStore.getArticleListAction(option.id)
   })
 
   const previewImage = (index: number, itemArr: any) => {

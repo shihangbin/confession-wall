@@ -1,74 +1,70 @@
-import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig } from 'axios'
-import mpAdapter from 'axios-miniprogram-adapter'
-axios.defaults.adapter = mpAdapter
 import { showToastError } from '@/utils/handle.error'
 import { WHITE_API } from '@/service/config/index'
 
 class SJRequest {
-  instance: AxiosInstance
+  baseURL: string
+  timeout: number
   // 创建实例
-  constructor(config: AxiosRequestConfig) {
-    this.instance = axios.create(config)
-
-    // 请求拦截器
-    this.instance.interceptors.request.use(
-      (config: any) => {
-        const url: any = config.url
-        const token = uni.getStorageSync('token')
-
-        if (WHITE_API.indexOf(url) == -1 && token) {
-          config.headers['Authorization'] = `Bearer ${token}`
-        }
-        console.log(config)
-
-        return config
-      },
-      (error) => {
-        return Promise.reject(error)
-      }
-    )
-
-    // 响应拦截器
-    this.instance.interceptors.response.use(
-      async (response) => {
-        const res = response.data
-        const code = response.data.code || 0
-        const msg = response.data.message || '未知错误'
-        const token = uni.getStorageSync('token')
-
-        if (code === -1005 && token) {
-          showToastError('none', msg)
-          setTimeout(() => {
-            uni.navigateTo({
-              url: '/pages-user/login/login',
-            })
-          }, 2000)
-        }
-
-        return res
-      },
-      (error) => {
-        return Promise.reject(error)
-      }
-    )
+  constructor(config) {
+    this.baseURL = config.baseURL
+    this.timeout = config.timeout
   }
 
   // 封装网络请求
-  request(config: AxiosRequestConfig) {
-    return this.instance.request(config)
-  }
+  request(config: any) {
+    return new Promise((resolve, reject) => {
+      const url = config.url
+      const method = config.method || 'GET'
+      const data = config.data || {}
+      const headers = config.headers || {}
 
-  post(config: AxiosRequestConfig) {
-    return this.request({
-      ...config,
-      method: 'post',
+      // 判断是否需要带上 token
+      const token = uni.getStorageSync('token')
+      if (WHITE_API.indexOf(url) === -1 && token) {
+        headers.Authorization = `Bearer ${token}`
+      }
+
+      // 发送请求
+      uni.request({
+        url: this.baseURL + url,
+        method: method,
+        data: data,
+        header: headers,
+        timeout: this.timeout,
+        success: (res) => {
+          if (res.statusCode === 200) {
+            const response = {
+              data: res.data,
+              status: res.statusCode,
+              statusText: 'OK',
+              headers: res.header,
+            }
+            // 这里你可以添加更多的响应处理逻辑
+            resolve(response.data)
+          } else {
+            reject(
+              new Error(`Request failed with status code ${res.statusCode}`)
+            )
+          }
+        },
+        fail: (error) => {
+          reject(error)
+        },
+      })
     })
   }
-  get(config: AxiosRequestConfig) {
+
+  post(config: any) {
     return this.request({
       ...config,
-      method: 'get',
+      method: 'POST',
+    })
+  }
+
+  get(config: any) {
+    return this.request({
+      ...config,
+      method: 'GET',
     })
   }
 }
