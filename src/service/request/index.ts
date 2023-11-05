@@ -5,7 +5,7 @@ class SJRequest {
   baseURL: string
   timeout: number
   // 创建实例
-  constructor(config) {
+  constructor(config: any) {
     this.baseURL = config.baseURL
     this.timeout = config.timeout
   }
