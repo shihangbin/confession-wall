@@ -12,7 +12,7 @@
 
   const toSignUP = () => {
     uni.navigateTo({
-      url: '/pages-user/sign-up/sign-up',
+      url: '/pages-login/sign-up/sign-up',
     })
   }
 
@@ -45,6 +45,15 @@
     } else {
       showToastError('error', msg.value)
     }
+  }
+
+  const show = ref(false)
+  const open = () => {
+    // console.log('open');
+  }
+  const close = () => {
+    show.value = false
+    // console.log('close');
   }
 </script>
 
@@ -89,7 +98,8 @@
               text="忘记密码"
               plain
               type="primary"
-              shape="circle">
+              shape="circle"
+              @click="show = true">
             </u-button>
           </div>
           <div class="sign-up">
@@ -112,18 +122,31 @@
         </div>
       </div>
     </div>
+    <u-popup
+      :show="show"
+      mode="center"
+      @close="close"
+      @open="open">
+      <div class="wx">
+        <img
+          class="wx-img"
+          src="https://img.xbin.cn/school-wall/article_images/2023/11/03/c3aee3b17fe762b72bb745c1c"
+          alt="" />
+      </div>
+    </u-popup>
   </div>
 </template>
 
 <style lang="scss" scoped>
   .login {
-    height: 70vh;
+    // height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     .title {
-      display: flex;
+      // display: flex;
+      margin-top: 88rpx;
     }
     .user-info {
       width: 80%;
@@ -143,6 +166,14 @@
         .sign-up {
           margin-right: 20rpx;
         }
+      }
+    }
+    .wx {
+      width: 500rpx;
+      height: 700rpx;
+      .wx-img {
+        width: 100%;
+        height: 100%;
       }
     }
   }

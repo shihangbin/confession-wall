@@ -12,7 +12,7 @@
   const goUser = () => {
     if (isLogin.value) {
       uni.navigateTo({
-        url: '/pages-user/user/user',
+        url: '/pages/user/user/user',
       })
     } else if (isLogin.value) {
       login()
@@ -21,7 +21,7 @@
 
   const login = () => {
     uni.navigateTo({
-      url: '/pages-user/login/login',
+      url: '/pages-login/login/login',
     })
   }
 </script>

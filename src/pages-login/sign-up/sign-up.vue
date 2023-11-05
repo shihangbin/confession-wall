@@ -23,7 +23,7 @@
     await signUpStore.signUpAction(username.value, password2.value)
     if (code.value === 0) {
       uni.navigateTo({
-        url: '/pages-user/login/login',
+        url: '/pages-login/login/login',
       })
     }
     if (code.value === -1002) {
@@ -97,7 +97,7 @@
 
 <style lang="scss" scoped>
   .sign-up {
-    height: 70vh;
+    // height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -105,7 +105,8 @@
     // margin-top: 66rpx;
 
     .title {
-      display: flex;
+      // display: flex;
+      margin-top: 88rpx;
     }
     .user-info {
       width: 80%;

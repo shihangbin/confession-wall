@@ -1,12 +1,12 @@
 <script setup lang="ts">
   const toSignUP = () => {
     uni.navigateTo({
-      url: '/pages-user/sign-up/sign-up',
+      url: '/pages-login/sign-up/sign-up',
     })
   }
   const toLogin = () => {
     uni.navigateTo({
-      url: '/pages-user/login/login',
+      url: '/pages-login/login/login',
     })
   }
 </script>

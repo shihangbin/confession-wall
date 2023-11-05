@@ -59,6 +59,7 @@
             :src="userInfo.avatar_path"
             size="166rpx"
             shape="square"
+            mode="widthFix"
             @click="editBtn">
           </up-avatar>
         </div>
@@ -151,6 +152,9 @@
         overflow: hidden;
         background-color: #ccc;
         box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         // border-radius: 10rpx;
         // border: 2rpx solid #000;
       }

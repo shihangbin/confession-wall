@@ -16,7 +16,7 @@
       }
     },
     {
-      "path": "pages/index/pages/article",
+      "path": "pages/index/article/article",
       "style": {
         "navigationBarTitleText": "详情",
         "navigationBarBackgroundColor": "#fff",
@@ -38,22 +38,22 @@
         "navigationBarBackgroundColor": "#fff",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/user/user/user",
+      "style": {
+        "enablePullDownRefresh": false,
+        "navigationBarRightButton": {
+          "hide": true
+        },
+        "navigationStyle": "custom"
+      }
     }
   ],
   "subPackages": [
     {
-      "root": "pages-user",
+      "root": "pages-login",
       "pages": [
-        {
-          "path": "user/user",
-          "style": {
-            "enablePullDownRefresh": false,
-            "navigationBarRightButton": {
-              "hide": true
-            },
-            "navigationStyle": "custom"
-          }
-        },
         {
           "path": "login/login",
           "style": {
@@ -69,20 +69,32 @@
           }
         }
       ]
+    },
+    {
+      "root": "pages-publish",
+      "pages": [
+        {
+          "path": "article/article",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarTitleText": "文章发布"
+          }
+        }
+      ]
     }
   ],
   "preloadRule": {
-    "pages-user/user/user": {
+    "pages-login/login/login": {
       "network": "all",
-      "packages": ["pages-user"]
+      "packages": ["pages-login"]
     },
-    "pages-user/login/login": {
+    "pages-login/sign-up/sign-up": {
       "network": "all",
-      "packages": ["pages-user"]
+      "packages": ["pages-login"]
     },
-    "pages-user/sign-up/sign-up": {
+    "pages-publish/article/article": {
       "network": "all",
-      "packages": ["pages-user"]
+      "packages": ["pages-publish"]
     }
   },
   "tabBar": {

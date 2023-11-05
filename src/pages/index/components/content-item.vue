@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { timeFormat } from '@/utils/dayjs'
+
   const props = defineProps({
     itemArticle: {
       type: Object,
@@ -15,7 +17,7 @@
 
   const toArticle = (id: string) => {
     uni.navigateTo({
-      url: `/pages/index/pages/article?id=${id}`,
+      url: `/pages/index/article/article?id=${id}`,
     })
   }
 </script>
@@ -59,7 +61,9 @@
       </scroll-view>
     </div>
     <div class="content-bottom">
-      <div class="bottom-time">{{ props.itemArticle.publication_date }}</div>
+      <div class="bottom-time">
+        {{ timeFormat(props.itemArticle.publication_date) }}
+      </div>
       <div class="bottom-like">喜欢</div>
     </div>
   </div>

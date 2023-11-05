@@ -2,6 +2,7 @@
   import { storeToRefs } from 'pinia'
   import { onLoad } from '@dcloudio/uni-app'
   import { useArticleStore } from '../../../store/article'
+  import { timeFormat } from '@/utils/dayjs'
 
   const articleStore = useArticleStore()
   const { articleItem } = storeToRefs(articleStore)
@@ -28,7 +29,7 @@
         </image>
         <div class="info">
           <div class="name">{{ articleItem?.user?.username }}</div>
-          <div>{{ articleItem?.publication_date }}</div>
+          <div>{{ timeFormat(articleItem?.publication_date) }}</div>
         </div>
       </div>
       <div class="content">
