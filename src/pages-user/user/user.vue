@@ -6,7 +6,6 @@
 <template>
   <div class="user">
     <user-nav></user-nav>
-
     <user-tabs></user-tabs>
   </div>
 </template>

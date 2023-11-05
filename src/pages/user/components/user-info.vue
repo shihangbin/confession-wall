@@ -1,13 +1,27 @@
 <script lang="ts" setup>
   import { storeToRefs } from 'pinia'
   import { useUserStore } from '@/store/user'
+  import { onShow } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
-  const { userInfo } = storeToRefs(userStore)
+  const { userInfo, isLogin, showLogin, helloLogin } = storeToRefs(userStore)
 
+  onShow(async () => {
+    await userStore.getUserAction()
+  })
   const goUser = () => {
+    if (isLogin.value) {
+      uni.navigateTo({
+        url: '/pages-user/user/user',
+      })
+    } else if (isLogin.value) {
+      login()
+    }
+  }
+
+  const login = () => {
     uni.navigateTo({
-      url: '/pages-user/user/user',
+      url: '/pages-user/login/login',
     })
   }
 </script>
@@ -16,23 +30,23 @@
   <div class="user-info">
     <div class="avatar">
       <up-avatar
-        :src="userInfo.avatarUrl"
+        :src="userInfo.avatar_path"
         size="150"
         shape="square">
       </up-avatar>
     </div>
     <div class="message">
       <div class="name">
-        <template v-if="userInfo.isLogin">
-          <span>Hi,{{ userInfo.name }}</span>
+        <template v-if="isLogin">
+          <span>Hi,{{ userInfo.username }}</span>
         </template>
         <template v-else>
           <span>请先登录</span>
         </template>
       </div>
       <div class="hello">
-        <template v-if="userInfo.isLogin">
-          <span>{{ userInfo.helloLogin }}</span>
+        <template v-if="isLogin">
+          <span>{{ helloLogin }}</span>
         </template>
         <template v-else>
           <span>请先登录</span>
@@ -40,13 +54,13 @@
       </div>
     </div>
     <div class="login">
-      <template v-if="userInfo.isLogin">
+      <template v-if="isLogin">
         <span @click="goUser">
-          {{ userInfo.showLogin }}
+          {{ showLogin }}
         </span>
       </template>
       <template v-else>
-        <span>点击登录</span>
+        <span @click="login">点击登录</span>
       </template>
     </div>
   </div>

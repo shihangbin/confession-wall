@@ -2,19 +2,21 @@
   import { ref } from 'vue'
   import { useUserStore } from '@/store/user'
   import { storeToRefs } from 'pinia'
-  import { onLoad } from '@dcloudio/uni-app'
+  import { onShow } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
-  const { userInfo } = storeToRefs(userStore)
+  const { userInfo }: any = storeToRefs(userStore)
+  let messages = ref<string>('')
 
-  onLoad(async () => {
+  onShow(async () => {
     await userStore.getUserAction()
   })
 
-  const infos: any = Object.values(userInfo.value.infos)
-  let messages = ref<string>('')
-  for (const key in infos) {
-    messages.value += infos[key] + '/'
+  const keyArray = ['age', 'gender', 'major', 'class']
+  for (const key in userInfo.value) {
+    if (keyArray.includes(key)) {
+      messages.value += userInfo.value[key] + '/'
+    }
   }
 
   const menu = uni.getSystemInfoSync().statusBarHeight
@@ -29,7 +31,7 @@
 
   const copy = () => {
     uni.setClipboardData({
-      data: userInfo.value.wxqq,
+      data: userInfo.value.wechat_or_qq,
       success: function (res) {
         uni.showToast({
           title: '复制成功',
@@ -54,7 +56,7 @@
       <div class="nav-info">
         <div class="nav-avatar">
           <up-avatar
-            :src="userInfo.avatarUrl"
+            :src="userInfo.avatar_path"
             size="166rpx"
             shape="square"
             @click="editBtn">
@@ -64,7 +66,7 @@
           <up-text
             :lines="1"
             bold
-            :text="userInfo.name"
+            :text="userInfo.username"
             size="33rpx"
             color="#7a57d1">
           </up-text>
@@ -84,7 +86,7 @@
             :lines="1"
             size="30rpx"
             color="$u-content-color"
-            :text="userInfo.wxqq"
+            :text="userInfo.wechat_or_qq"
             @click="copy">
           </up-text>
         </div>

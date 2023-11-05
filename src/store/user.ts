@@ -2,36 +2,35 @@ import { defineStore } from 'pinia'
 import { user } from '@/service/modules/login'
 
 export const useUserStore = defineStore('user', {
-  state() {
-    return {
-      userInfo: {
-        name: '开朗的网友！',
-        avatarUrl: 'https://img.xbin.cn/images/2023/10/03-19-00-a6822b.jpg',
-        sign: '不忘初心，方得始终！',
-        wxqq: '18213331550',
-        infos: {
-          age: '19岁',
-          sex: '男',
-          field: '计算机应用',
-          classes: '计应20002',
-        },
-        isLogin: true,
-        // isLogin: false,
-        helloLogin: '欢迎来到云南能源表白墙！',
-        showLogin: '编辑资料',
-      },
-    }
-  },
+  state: () => ({
+    userInfo: {
+      id: 0,
+      username: '开朗的网友',
+      avatar_path: 'http://api.xbin.cn/upload/avatar/14',
+      role: 'user',
+      is_muted: 0,
+      wechat_or_qq: '18213331550',
+      age: 99,
+      gender: '男',
+      major: '计算机应用专业',
+      class: '计应20002班',
+      createAt: '2023-11-02T06:02:36.000Z',
+    },
+    isLogin: true,
+    showLogin: '编辑资料',
+    helloLogin: '欢迎来到云南能源表白墙！',
+  }),
   actions: {
     async getUserAction() {
-      const userResult = await user()
-      this.userInfo.name = userResult?.data?.username
-      this.userInfo.avatarUrl = userResult?.data?.avatar_path
-      this.userInfo.wxqq = userResult?.data?.wechat_or_qq
-      this.userInfo.infos.age = userResult?.data?.age
-      this.userInfo.infos.sex = userResult?.data?.gender
-      this.userInfo.infos.field = userResult?.data?.major
-      this.userInfo.infos.classes = userResult?.data?.class
+      const userResult: any = await user()
+      this.userInfo = userResult.data
+      // this.userInfo.avatar_path = userResult?.data?.avatar_path
+      // this.userInfo.role = userResult?.data?.wechat_or_qq
+      // this.userInfo.is_muted = userResult?.data?.age
+      // this.userInfo.wechat_or_qq = userResult?.data?.gender
+      // this.userInfo.age = userResult?.data?.major
+      // this.userInfo.infos.classes = userResult?.data?.class
+
       // this.userInfo.isLogin = userResult.data.is_muted
     },
   },

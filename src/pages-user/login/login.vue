@@ -2,9 +2,10 @@
   import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useLoginStore } from '@/store/login'
+  import { showToastError } from '@/utils/handle.error'
 
   const loginStore = useLoginStore()
-  const { token, code } = storeToRefs(loginStore)
+  const { token, code, msg } = storeToRefs(loginStore)
 
   const username = ref<string>('')
   const password = ref<string>('')
@@ -16,21 +17,33 @@
   }
 
   const loginBtn = async () => {
+    uni.showLoading({
+      title: '加载中',
+    })
+
+    if (!username.value) {
+      showToastError('error', '请输入用户名!')
+      return
+    }
+    if (!password.value) {
+      showToastError('error', '请输入密码!')
+      return
+    }
+
     await loginStore.loginAction(username.value, password.value)
 
     if (token.value && code.value === 0) {
-      uni.showLoading({
-        title: '加载中',
-      })
       // 存储数据到本地存储
       uni.setStorageSync('token', token.value)
 
-      setTimeout(function () {
+      setTimeout(() => {
         uni.hideLoading()
         uni.switchTab({
           url: '/pages/index/index',
         })
       }, 1000)
+    } else {
+      showToastError('error', msg.value)
     }
   }
 </script>
