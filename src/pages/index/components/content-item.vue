@@ -55,6 +55,7 @@
             v-if="item"
             class="scroll-view-item"
             :src="item"
+            mode="aspectFill"
             @click="previewImage(index, props.itemArticle.image_urls)">
           </image>
         </template>

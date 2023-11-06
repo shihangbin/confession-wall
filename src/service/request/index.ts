@@ -24,6 +24,10 @@ class SJRequest {
         headers.Authorization = `Bearer ${token}`
       }
 
+      if (method == 'POST') {
+        headers.Authorization = `Bearer ${token}`
+      }
+
       // 发送请求
       uni.request({
         url: this.baseURL + url,

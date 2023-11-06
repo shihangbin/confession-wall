@@ -19,7 +19,7 @@
     }
   }
 
-  const menu = uni.getSystemInfoSync().statusBarHeight
+  const menu: any = uni.getSystemInfoSync().statusBarHeight
 
   const navLeftBtn = () => {
     uni.navigateBack()
@@ -45,7 +45,7 @@
   <div class="nav">
     <div
       class="nav-left-btn"
-      :style="{ paddingTop: menu + 'px' }">
+      :style="{ paddingTop: menu + 12.5 + 'px' }">
       <u-icon
         name="arrow-left"
         color="$u-main-color"
