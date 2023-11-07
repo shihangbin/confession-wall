@@ -28,42 +28,42 @@
       <div class="top-avatar">
         <image
           class="image"
-          :src="props.itemArticle.user.avatarURL">
+          :src="props.itemArticle?.user?.avatarURL">
         </image>
       </div>
       <div class="top-center">
-        <div class="top-name">{{ props.itemArticle.user.username }}</div>
+        <div class="top-name">{{ props.itemArticle?.user?.username }}</div>
         <div class="top-city">位置</div>
       </div>
       <div class="top-btn">按钮</div>
     </div>
     <div class="content-center">
       <up-text
-        @click="toArticle(props.itemArticle.id)"
+        @click="toArticle(props.itemArticle?.id)"
         :lines="2"
         size="32"
         lineHeight="50"
-        :text="props.itemArticle.content">
+        :text="props.itemArticle?.content">
       </up-text>
       <scroll-view
         class="scroll-view"
         scroll-x="true">
         <template
-          v-for="(item, index) in props.itemArticle.image_urls"
+          v-for="(item, index) in props.itemArticle?.image_urls"
           :key="index">
           <image
             v-if="item"
             class="scroll-view-item"
             :src="item"
             mode="aspectFill"
-            @click="previewImage(index, props.itemArticle.image_urls)">
+            @click="previewImage(index, props.itemArticle?.image_urls)">
           </image>
         </template>
       </scroll-view>
     </div>
     <div class="content-bottom">
       <div class="bottom-time">
-        {{ timeFormat(props.itemArticle.publication_date) }}
+        {{ timeFormat(props.itemArticle?.publication_date) }}
       </div>
       <div class="bottom-like">喜欢</div>
     </div>

@@ -1,22 +1,53 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+  import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useArticleStore } from '@/store/article'
   import searchTabs from './components/search-tabs.vue'
   import contentBlock from './components/content-item.vue'
   import comPublish from '@/components/publish.vue'
-  import { onPageScroll } from '@dcloudio/uni-app'
+  import { showToastError } from '@/utils/handle.error'
+  import {
+    onPageScroll,
+    onPullDownRefresh,
+    onReachBottom,
+    onShow,
+  } from '@dcloudio/uni-app'
 
   const articleStore = useArticleStore()
   const { articleList } = storeToRefs(articleStore)
 
-  onMounted(async () => {
-    await articleStore.getArticleListAction()
-  })
-
   const scrollTop = ref(0)
   onPageScroll((e) => {
     scrollTop.value = e.scrollTop
+  })
+
+  const getArticle = async () => {
+    return await articleStore.getArticleListAction()
+  }
+
+  onShow(async () => {
+    await getArticle()
+  })
+
+  onPullDownRefresh(async () => {
+    const result = await getArticle()
+
+    if (result.length > 0) {
+      uni.stopPullDownRefresh()
+      return
+    }
+    setTimeout(function () {
+      showToastError('none', '网络错误')
+      uni.stopPullDownRefresh()
+      return
+    }, 10000)
+  })
+  const offset = ref(0)
+  onReachBottom(async () => {
+    // 当页面滚动到底部时触发
+    offset.value += 5
+
+    await articleStore.getArticleListAction(offset.value, 5)
   })
 
   const customStyle = {
@@ -38,7 +69,7 @@
   <div class="index">
     <search-tabs></search-tabs>
     <template
-      v-for="(item, index) in articleList"
+      v-for="item in articleList"
       :key="item.id">
       <content-block :itemArticle="item"></content-block>
     </template>

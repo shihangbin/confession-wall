@@ -1,8 +1,12 @@
 import sjRequest from '..'
 
-export const getArticleList = () => {
+export const getArticleList = (offset: number, size: number) => {
   return sjRequest.get({
     url: '/article',
+    data: {
+      offset: offset || 0,
+      size: size || 5,
+    },
   })
 }
 

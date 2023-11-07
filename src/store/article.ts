@@ -7,23 +7,24 @@ import {
 
 export const useArticleStore = defineStore('article', {
   state: (): any => ({
-    articleList: {},
+    articleList: [],
     articleItem: {},
   }),
 
   actions: {
-    async getArticleListAction() {
-      const articleList: any = await getArticleList()
-      this.articleList = articleList.data
+    async getArticleListAction(offset: number, size: number) {
+      const articleList: any = await getArticleList(offset, size)
+      this.articleList = [...this.articleList, ...articleList.data]
+      return this.articleList
     },
     async getArticleItemAction(id: string) {
       const articleItem: any = await getArticleItem(id)
       this.articleItem = articleItem.data
+      return this.articleItem
     },
     async postArticlePublish(content: any) {
       const publishArticle: any = await postArticle(content)
-      // this.articleItem = publishArticle.data
-      console.log(publishArticle)
+      return publishArticle
     },
   },
 })

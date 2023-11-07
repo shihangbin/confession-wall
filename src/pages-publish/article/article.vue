@@ -1,13 +1,33 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useArticleStore } from '@/store/article'
+  import { showToastError } from '@/utils/handle.error'
 
   const articleStore = useArticleStore()
   const content = ref('')
   const fileList: any = ref([])
 
   const publishArticle = async () => {
-    await articleStore.postArticlePublish(content.value)
+    if (content.value.length < 2) {
+      showToastError('none', '字数少于二')
+      return
+    }
+    const result = await articleStore.postArticlePublish(content.value)
+    const code = result.code
+    const msg = result.message
+
+    if (code === 0) {
+      content.value = ''
+      fileList.value = []
+
+      showToastError('none', msg)
+
+      setTimeout(() => {
+        uni.switchTab({
+          url: '/pages/index/index',
+        })
+      }, 1000)
+    }
   }
 
   // 删除图片
@@ -18,7 +38,7 @@
   // 新增图片
   const afterRead = async (event: { file: ConcatArray<never> }) => {
     // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
-    let lists = [].concat(event.file)
+    let lists: any = [].concat(event.file)
     let fileListLen = fileList.value.length
     lists.map((item: any) => {
       fileList.value.push({

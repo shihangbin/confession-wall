@@ -15,6 +15,7 @@ class SJRequest {
     return new Promise((resolve, reject) => {
       const url = config.url
       const method = config.method || 'GET'
+      const params = config.params || {}
       const data = config.data || {}
       const headers = config.headers || {}
 
@@ -34,8 +35,9 @@ class SJRequest {
         method: method,
         data: data,
         header: headers,
+        params: params,
         timeout: this.timeout,
-        success: (res) => {
+        success: (res: any) => {
           if (res.statusCode === 200) {
             const response = {
               data: res.data,
@@ -43,6 +45,19 @@ class SJRequest {
               statusText: 'OK',
               headers: res.header,
             }
+
+            const code = res.data.code
+            const msg = res.data.message
+
+            if (code !== 0) {
+              showToastError('error', msg)
+              setTimeout(() => {
+                uni.navigateTo({
+                  url: '/pages-login/login/login',
+                })
+              }, 1000)
+            }
+
             // 这里你可以添加更多的响应处理逻辑
             resolve(response.data)
           } else {

@@ -1,13 +1,32 @@
 <script lang="ts" setup>
   import { storeToRefs } from 'pinia'
   import { useUserStore } from '@/store/user'
-  import { onShow } from '@dcloudio/uni-app'
+  import { onPullDownRefresh, onShow } from '@dcloudio/uni-app'
+  import { showToastError } from '@/utils/handle.error'
 
   const userStore = useUserStore()
   const { userInfo, isLogin, showLogin, helloLogin } = storeToRefs(userStore)
 
+  const getUserInfo = async () => {
+    return await userStore.getUserAction()
+  }
+
   onShow(async () => {
-    await userStore.getUserAction()
+    await getUserInfo()
+  })
+
+  onPullDownRefresh(async () => {
+    const result = await getUserInfo()
+
+    if (Object.keys(result).length > 0) {
+      uni.stopPullDownRefresh()
+      return
+    }
+    setTimeout(function () {
+      showToastError('none', '网络错误')
+      uni.stopPullDownRefresh()
+      return
+    }, 10000)
   })
   const goUser = () => {
     if (isLogin.value) {

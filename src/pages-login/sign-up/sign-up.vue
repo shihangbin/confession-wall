@@ -16,6 +16,14 @@
       showToastError('none', '用户名或密码不能为空!')
       return
     }
+    if (
+      username.value.length < 6 ||
+      password1.value.length < 6 ||
+      password2.value.length < 6
+    ) {
+      showToastError('none', '用户名或者密码不能小于六位!')
+      return
+    }
     if (password1.value !== password2.value) {
       showToastError('none', '密码不一致!')
       return

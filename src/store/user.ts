@@ -24,14 +24,7 @@ export const useUserStore = defineStore('user', {
     async getUserAction() {
       const userResult: any = await user()
       this.userInfo = userResult.data
-      // this.userInfo.avatar_path = userResult?.data?.avatar_path
-      // this.userInfo.role = userResult?.data?.wechat_or_qq
-      // this.userInfo.is_muted = userResult?.data?.age
-      // this.userInfo.wechat_or_qq = userResult?.data?.gender
-      // this.userInfo.age = userResult?.data?.major
-      // this.userInfo.infos.classes = userResult?.data?.class
-
-      // this.userInfo.isLogin = userResult.data.is_muted
+      return this.userInfo
     },
   },
 })
