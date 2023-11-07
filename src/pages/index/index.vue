@@ -7,31 +7,40 @@
   import comPublish from '@/components/publish.vue'
   import { showToastError } from '@/utils/handle.error'
   import {
+    onLoad,
     onPageScroll,
     onPullDownRefresh,
     onReachBottom,
-    onShow,
   } from '@dcloudio/uni-app'
 
   const articleStore = useArticleStore()
   const { articleList } = storeToRefs(articleStore)
-
+  const offset = ref(0)
   const scrollTop = ref(0)
+
   onPageScroll((e) => {
     scrollTop.value = e.scrollTop
   })
 
-  const getArticle = async () => {
-    return await articleStore.getArticleListAction()
+  const getArticle = async (offset: number, size: number) => {
+    return await articleStore.getArticleListAction(offset, size)
   }
 
-  onShow(async () => {
-    await getArticle()
+  onLoad(async () => {
+    articleList.value = []
+    await getArticle(0, 5)
+  })
+
+  onReachBottom(async () => {
+    // 当页面滚动到底部时触发
+    offset.value += 5
+    await getArticle(offset.value, 5)
   })
 
   onPullDownRefresh(async () => {
-    const result = await getArticle()
-
+    articleList.value = []
+    offset.value = 0
+    const result = await getArticle(0, 5)
     if (result.length > 0) {
       uni.stopPullDownRefresh()
       return
@@ -41,13 +50,6 @@
       uni.stopPullDownRefresh()
       return
     }, 10000)
-  })
-  const offset = ref(0)
-  onReachBottom(async () => {
-    // 当页面滚动到底部时触发
-    offset.value += 5
-
-    await articleStore.getArticleListAction(offset.value, 5)
   })
 
   const customStyle = {

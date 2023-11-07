@@ -26,13 +26,9 @@
         uni.switchTab({
           url: '/pages/index/index',
         })
+        articleStore.getArticleListAction(0, 5)
       }, 1000)
     }
-  }
-
-  // 删除图片
-  const deletePic = (event: { index: number }) => {
-    fileList.value.splice(event.index, 1)
   }
 
   // 新增图片
@@ -54,7 +50,7 @@
       fileList.value.splice(fileListLen, 1, {
         ...item,
         status: 'success',
-        message: '',
+        message: '上传完成',
         url: result,
       })
       fileListLen++
@@ -100,9 +96,7 @@
         <u-upload
           :fileList="fileList"
           @afterRead="afterRead"
-          @delete="deletePic"
           :maxCount="9"
-          :previewFullImage="true"
           width="220"
           height="220"
           multiple>
@@ -113,7 +107,7 @@
       @click="publishArticle"
       text="发布文章"
       shape="circle"
-      color="linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%);">
+      color="#d2c1ec">
     </up-button>
   </div>
 </template>

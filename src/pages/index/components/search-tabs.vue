@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+  import { showToastError } from '../../../utils/handle.error'
+
   const lists = [
     {
       name: '最新',
@@ -7,6 +9,14 @@
       name: '热门',
     },
   ]
+  const tabs = (e: any) => {
+    console.log(e)
+    showToastError('none', '开发中...')
+  }
+  const searchBtn = (e: any) => {
+    console.log(e)
+    showToastError('none', '开发中...')
+  }
 </script>
 
 <template>
@@ -17,6 +27,7 @@
         lineWidth="40rpx"
         lineHeight="6rpx"
         lineColor="#7A57D1"
+        @click="tabs"
         :activeStyle="{
           color: '#303133',
           fontWeight: 'bold',
@@ -35,6 +46,7 @@
         clearabled
         searchIconSize="40rpx"
         actionText="搜索"
+        @custom="searchBtn"
         height="60rpx">
       </u-search>
     </div>

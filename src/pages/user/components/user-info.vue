@@ -49,7 +49,7 @@
   <div class="user-info">
     <div class="avatar">
       <up-avatar
-        :src="userInfo.avatar_path"
+        :src="userInfo?.avatar_path"
         size="150"
         shape="square">
       </up-avatar>
@@ -57,7 +57,7 @@
     <div class="message">
       <div class="name">
         <template v-if="isLogin">
-          <span>Hi,{{ userInfo.username }}</span>
+          <span>Hi,{{ userInfo?.username }}</span>
         </template>
         <template v-else>
           <span>请先登录</span>

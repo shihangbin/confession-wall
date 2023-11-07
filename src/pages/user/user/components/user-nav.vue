@@ -27,6 +27,21 @@
 
   const editBtn = () => {
     console.log('点击了头像')
+
+    // uni.uploadFile({
+    //   url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
+    //   filePath: url,
+    //   name: 'file',
+    //   header: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   success: (res: any) => {
+    //     setTimeout(() => {
+    //       res = JSON.parse(res.data)
+    //       resolve(res)
+    //     }, 1000)
+    //   },
+    // })
   }
 
   const copy = () => {
@@ -56,7 +71,7 @@
       <div class="nav-info">
         <div class="nav-avatar">
           <up-avatar
-            :src="userInfo.avatar_path"
+            :src="userInfo?.avatar_path"
             size="166rpx"
             shape="square"
             mode="widthFix"
@@ -67,7 +82,7 @@
           <up-text
             :lines="1"
             bold
-            :text="userInfo.username"
+            :text="userInfo?.username"
             size="33rpx"
             color="#7a57d1">
           </up-text>
@@ -87,7 +102,7 @@
             :lines="1"
             size="30rpx"
             color="$u-content-color"
-            :text="userInfo.wechat_or_qq"
+            :text="userInfo?.wechat_or_qq"
             @click="copy">
           </up-text>
         </div>
@@ -97,7 +112,7 @@
             :lines="1"
             size="30rpx"
             color="$u-content-color"
-            :text="userInfo.sign">
+            :text="userInfo?.sign">
           </up-text>
         </div>
         <div class="nav-like">
