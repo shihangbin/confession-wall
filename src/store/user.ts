@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { user } from '@/service/modules/login'
+import { user, userInfo } from '@/service/modules/login'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -23,6 +23,11 @@ export const useUserStore = defineStore('user', {
   actions: {
     async getUserAction() {
       const userResult: any = await user()
+      this.userInfo = userResult.data
+      return this.userInfo
+    },
+    async getUserInfoAction(id: string | number) {
+      const userResult: any = await userInfo(id)
       this.userInfo = userResult.data
       return this.userInfo
     },

@@ -2,14 +2,18 @@
   import { ref } from 'vue'
   import { useUserStore } from '@/store/user'
   import { storeToRefs } from 'pinia'
-  import { onShow } from '@dcloudio/uni-app'
+  import { onLoad } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
   const { userInfo }: any = storeToRefs(userStore)
   let messages = ref<string>('')
 
-  onShow(async () => {
-    await userStore.getUserAction()
+  onLoad(async (params: any) => {
+    if (params.id === undefined) {
+      await userStore.getUserAction()
+    } else {
+      await userStore.getUserInfoAction(params.id)
+    }
   })
 
   const keyArray = ['age', 'gender', 'major', 'class']
@@ -26,7 +30,10 @@
   }
 
   const editBtn = () => {
-    console.log('点击了头像')
+    //在起始页面跳转到test.vue页面并传递参数
+    uni.navigateTo({
+      url: '/pages/user/avatar/avatar',
+    })
 
     // uni.uploadFile({
     //   url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址

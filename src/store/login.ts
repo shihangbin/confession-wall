@@ -18,6 +18,7 @@ export const useLoginStore = defineStore('login', {
       const loginResult: any = await login(username, password)
       this.code = loginResult.code
       this.msg = loginResult.message
+
       if (this.code !== 0) {
         showToastError('error', this.msg)
         uni.hideLoading()

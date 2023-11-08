@@ -20,6 +20,12 @@
       url: `/pages/index/article/article?id=${id}`,
     })
   }
+
+  const toUserInfo = (id: string | number) => {
+    uni.navigateTo({
+      url: `/pages/user/user/user?id=${id}`,
+    })
+  }
 </script>
 
 <template>
@@ -27,6 +33,7 @@
     <div class="content-top">
       <div class="top-avatar">
         <image
+          @click="toUserInfo(props.itemArticle?.user?.id)"
           class="image"
           :src="props.itemArticle?.user?.avatarURL">
         </image>

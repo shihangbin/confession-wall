@@ -107,9 +107,8 @@
   .article {
     padding: 20rpx;
     .content {
-      .article-content {
-        margin-top: 20rpx;
-      }
+      margin-bottom: 40rpx;
+      .article-content,
       .article-images {
         margin-top: 20rpx;
       }

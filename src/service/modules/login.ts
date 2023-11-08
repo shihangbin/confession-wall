@@ -15,3 +15,8 @@ export const user = () => {
     url: `/login/user`,
   })
 }
+export const userInfo = (id: string | number) => {
+  return sjRequest.get({
+    url: `/user/${id}`,
+  })
+}
