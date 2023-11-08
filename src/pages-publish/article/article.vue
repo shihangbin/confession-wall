@@ -6,77 +6,70 @@
   const articleStore = useArticleStore()
   const content = ref('')
   const fileList: any = ref([])
+  const imgArray: any = ref([])
+  const imgI: any = ref([])
 
+  const upImages = async (imgArray: any) => {
+    uni.showLoading({
+      title: '上传中...',
+      mask: true,
+    })
+    for (const item of imgArray) {
+      const token = uni.getStorageSync('token')
+      imgI.value.push(
+        await uni.uploadFile({
+          url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
+          filePath: item,
+          name: 'file',
+          header: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      )
+    }
+  }
   const publishArticle = async () => {
     if (content.value.length < 2) {
       showToastError('none', '字数少于二')
       return
     }
-    const result = await articleStore.postArticlePublish(content.value)
-    const code = result.code
-    const msg = result.message
 
-    if (code === 0) {
-      content.value = ''
-      fileList.value = []
+    const res: any = await upImages(imgArray.value)
 
-      showToastError('none', msg)
+    if (
+      typeof res === 'undefined' ||
+      imgI.value.length === imgArray.value.length
+    ) {
+      const result = await articleStore.postArticlePublish(content.value)
+      const code = result.code
+      const msg = result.message
 
-      setTimeout(() => {
-        uni.switchTab({
-          url: '/pages/index/index',
-        })
-        articleStore.getArticleListAction(0, 5)
-      }, 1000)
+      if (code === 0 && imgI.value.length === imgArray.value.length) {
+        uni.hideLoading()
+        content.value = ''
+        fileList.value = []
+        imgArray.value = []
+
+        showToastError('none', msg)
+
+        setTimeout(() => {
+          uni.switchTab({
+            url: '/pages/index/index',
+          })
+          uni.hideLoading()
+          articleStore.getArticleListAction(0, 5)
+        }, 1000)
+      }
     }
   }
 
-  // 新增图片
-  const afterRead = async (event: { file: ConcatArray<never> }) => {
-    // 当设置 mutiple 为 true 时, file 为数组格式，否则为对象格式
-    let lists: any = [].concat(event.file)
-    let fileListLen = fileList.value.length
-    lists.map((item: any) => {
-      fileList.value.push({
-        ...item,
-        status: 'uploading',
-        message: '上传中',
-      })
-    })
-    for (let i = 0; i < lists.length; i++) {
-      const result = await uploadFilePromise(lists[i].url)
-
-      let item = fileList.value[fileListLen]
-      fileList.value.splice(fileListLen, 1, {
-        ...item,
-        status: 'success',
-        message: '上传完成',
-        url: result,
-      })
-      fileListLen++
-    }
+  // 获取上传状态
+  const select = (e: any) => {
+    imgArray.value = e.tempFilePaths
   }
-
-  const uploadFilePromise = (url: any) => {
-    return new Promise((resolve, reject) => {
-      // 创建 FormData 对象并添加文件
-      const token = uni.getStorageSync('token')
-
-      uni.uploadFile({
-        url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
-        filePath: url,
-        name: 'file',
-        header: {
-          Authorization: `Bearer ${token}`,
-        },
-        success: (res: any) => {
-          setTimeout(() => {
-            res = JSON.parse(res.data)
-            resolve(res)
-          }, 1000)
-        },
-      })
-    })
+  // 获取上传进度
+  const remove = (e: any) => {
+    imgArray.value.splice(imgArray.value.indexOf(e.tempFilePath), 1)
   }
 </script>
 
@@ -93,14 +86,12 @@
         </u-textarea>
       </div>
       <div class="article-images">
-        <u-upload
-          :fileList="fileList"
-          @afterRead="afterRead"
-          :maxCount="9"
-          width="220"
-          height="220"
-          multiple>
-        </u-upload>
+        <uni-file-picker
+          v-model="fileList"
+          fileMediatype="image"
+          mode="grid"
+          @select="select"
+          @delete="remove" />
       </div>
     </div>
     <up-button
