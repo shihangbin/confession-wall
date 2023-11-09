@@ -8,11 +8,14 @@
   const { userInfo }: any = storeToRefs(userStore)
   let messages = ref<string>('')
 
+  const isLoginUser = ref(false)
   onLoad(async (params: any) => {
     if (params.id === undefined) {
       await userStore.getUserAction()
+      isLoginUser.value = true
     } else {
       await userStore.getUserInfoAction(params.id)
+      isLoginUser.value = false
     }
   })
 
@@ -31,24 +34,13 @@
 
   const editBtn = () => {
     //在起始页面跳转到test.vue页面并传递参数
-    uni.navigateTo({
-      url: '/pages/user/avatar/avatar',
-    })
+    console.log(isLoginUser.value)
 
-    // uni.uploadFile({
-    //   url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
-    //   filePath: url,
-    //   name: 'file',
-    //   header: {
-    //     Authorization: `Bearer ${token}`,
-    //   },
-    //   success: (res: any) => {
-    //     setTimeout(() => {
-    //       res = JSON.parse(res.data)
-    //       resolve(res)
-    //     }, 1000)
-    //   },
-    // })
+    if (isLoginUser.value) {
+      uni.navigateTo({
+        url: '/pages/user/avatar/avatar',
+      })
+    }
   }
 
   const copy = () => {
