@@ -3,7 +3,7 @@
   import { storeToRefs } from 'pinia'
   import { useArticleStore } from '@/store/article'
   import searchTabs from './components/search-tabs.vue'
-  import contentBlock from './components/content-item.vue'
+  import contentItem from './components/content-item.vue'
   import comPublish from '@/components/publish.vue'
   import { showToastError } from '@/utils/handle.error'
   import {
@@ -73,7 +73,7 @@
     <template
       v-for="item in articleList"
       :key="item.id">
-      <content-block :itemArticle="item"></content-block>
+      <content-item :itemArticle="item"></content-item>
     </template>
     <up-back-top
       :scroll-top="scrollTop"

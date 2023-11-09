@@ -25,10 +25,10 @@
       <div class="user">
         <image
           class="avatar"
-          :src="articleItem?.user?.avatarURL">
+          :src="articleItem?.user?.avatar_path">
         </image>
         <div class="info">
-          <div class="name">{{ articleItem?.user?.username }}</div>
+          <div class="name">{{ articleItem?.user?.nickname }}</div>
           <div>{{ timeFormat(articleItem?.publication_date) }}</div>
         </div>
       </div>

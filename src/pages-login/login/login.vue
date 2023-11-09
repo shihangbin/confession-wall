@@ -20,6 +20,10 @@
     uni.showLoading({
       title: '加载中',
     })
+    setTimeout(() => {
+      uni.hideLoading()
+      showToastError('error', '网络错误')
+    }, 10000)
 
     if (!username.value) {
       showToastError('error', '请输入用户名!')

@@ -57,7 +57,7 @@
     <div class="message">
       <div class="name">
         <template v-if="isLogin">
-          <span>Hi,{{ userInfo?.username }}</span>
+          <span>Hi,{{ userInfo?.nickname }}</span>
         </template>
         <template v-else>
           <span>请先登录</span>

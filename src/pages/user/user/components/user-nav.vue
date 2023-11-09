@@ -19,7 +19,7 @@
     }
   })
 
-  const keyArray = ['age', 'gender', 'major', 'class']
+  const keyArray = ['age', 'gender', 'major', 'school_class']
   for (const key in userInfo.value) {
     if (keyArray.includes(key)) {
       messages.value += userInfo.value[key] + '/'
@@ -38,7 +38,7 @@
 
     if (isLoginUser.value) {
       uni.navigateTo({
-        url: '/pages/user/avatar/avatar',
+        url: '/pages/user/update/update',
       })
     }
   }
@@ -81,7 +81,7 @@
           <up-text
             :lines="1"
             bold
-            :text="userInfo?.username"
+            :text="userInfo?.nickname"
             size="33rpx"
             color="#7a57d1">
           </up-text>
@@ -111,7 +111,7 @@
             :lines="1"
             size="30rpx"
             color="$u-content-color"
-            :text="userInfo?.sign">
+            :text="userInfo?.say">
           </up-text>
         </div>
         <div class="nav-like">

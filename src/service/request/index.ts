@@ -86,6 +86,13 @@ class SJRequest {
       method: 'GET',
     })
   }
+
+  put(config: any) {
+    return this.request({
+      ...config,
+      method: 'PUT',
+    })
+  }
 }
 
 export default SJRequest

@@ -35,11 +35,11 @@
         <image
           @click="toUserInfo(props.itemArticle?.user?.id)"
           class="image"
-          :src="props.itemArticle?.user?.avatarURL">
+          :src="props.itemArticle?.user?.avatar_path">
         </image>
       </div>
       <div class="top-center">
-        <div class="top-name">{{ props.itemArticle?.user?.username }}</div>
+        <div class="top-name">{{ props.itemArticle?.user?.nickname }}</div>
         <div class="top-city">位置</div>
       </div>
       <div class="top-btn">按钮</div>
