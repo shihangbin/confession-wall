@@ -10,6 +10,15 @@ export const getArticleList = (offset: number, size: number) => {
   })
 }
 
+export const getArticleSearch = (search: string) => {
+  return sjRequest.get({
+    url: '/article/search',
+    data: {
+      search,
+    },
+  })
+}
+
 export const getArticleItem = (id: string) => {
   return sjRequest.get({
     url: `/article/${id}`,
@@ -22,5 +31,11 @@ export const postArticle = (content: any) => {
     data: {
       content: content,
     },
+  })
+}
+
+export const delArticle = (id: number | string) => {
+  return sjRequest.delete({
+    url: `/article/${id}`,
   })
 }

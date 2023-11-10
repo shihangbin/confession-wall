@@ -1,5 +1,16 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
   import { timeFormat } from '@/utils/dayjs'
+  import { useUserStore } from '@/store/user'
+  import { useArticleStore } from '@/store/article'
+  import { storeToRefs } from 'pinia'
+  import { showToastError } from '@/utils/handle.error'
+
+  const userStore = useUserStore()
+  const articleStore = useArticleStore()
+
+  const { userInfo } = storeToRefs(userStore)
+  const { articleList } = storeToRefs(articleStore)
 
   const props = defineProps({
     itemArticle: {
@@ -26,6 +37,49 @@
       url: `/pages/user/user/user?id=${id}`,
     })
   }
+
+  const show = ref(false)
+
+  const list = ref([
+    {
+      name: '修改',
+      type: 'edit',
+      disabled: true,
+    },
+    {
+      name: '删除',
+      color: 'red',
+      type: 'del',
+      disabled: true,
+    },
+  ])
+
+  const articleId = async (id: string | number) => {
+    await userStore.getUserAction()
+    show.value = !show.value
+    if (userInfo.value.id === props?.itemArticle?.user?.id) {
+      for (const item of list.value) {
+        item.disabled = false
+      }
+    }
+  }
+  const sheetClose = () => {
+    show.value = !show.value
+  }
+  const sheetSelect = async (e: any) => {
+    if (e.type == 'edit') {
+      showToastError('none', '开发中...')
+    }
+    if (e.type == 'del') {
+      console.log('del', props.itemArticle?.id)
+      const res = await articleStore.delArticleAction(props.itemArticle?.id)
+      if (res.code === 0) {
+        showToastError('none', res.message)
+        articleList.value = []
+        await articleStore.getArticleListAction()
+      }
+    }
+  }
 </script>
 
 <template>
@@ -42,8 +96,26 @@
         <div class="top-name">{{ props.itemArticle?.user?.nickname }}</div>
         <div class="top-city">位置</div>
       </div>
-      <div class="top-btn">按钮</div>
+      <div class="top-btn">
+        <u-icon
+          @click="articleId(props.itemArticle?.id)"
+          name="more-circle"
+          color="#000"
+          size="50">
+        </u-icon>
+        <u-action-sheet
+          :actions="list"
+          :show="show"
+          cancelText="取消"
+          :closeOnClickOverlay="true"
+          :closeOnClickAction="true"
+          @close="sheetClose"
+          @select="sheetSelect"
+          round="30rpx">
+        </u-action-sheet>
+      </div>
     </div>
+
     <div class="content-center">
       <up-text
         @click="toArticle(props.itemArticle?.id)"
@@ -110,6 +182,9 @@
         flex-direction: column;
         margin-left: 20rpx;
         flex: 1;
+      }
+      .top-btn {
+        padding: 10rpx;
       }
     }
     .content-center {

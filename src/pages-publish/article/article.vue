@@ -2,8 +2,10 @@
   import { ref } from 'vue'
   import { useArticleStore } from '@/store/article'
   import { showToastError } from '@/utils/handle.error'
+  import { storeToRefs } from 'pinia'
 
   const articleStore = useArticleStore()
+  const { articleList } = storeToRefs(articleStore)
   const content = ref('')
   const fileList: any = ref([])
   const imgArray: any = ref([])
@@ -52,12 +54,13 @@
 
         showToastError('none', msg)
 
-        setTimeout(() => {
+        setTimeout(async () => {
           uni.switchTab({
             url: '/pages/index/index',
           })
           uni.hideLoading()
-          articleStore.getArticleListAction(0, 5)
+          articleList.value = []
+          await articleStore.getArticleListAction(0, 5)
         }, 1000)
       }
     }

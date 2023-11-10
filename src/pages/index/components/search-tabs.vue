@@ -1,5 +1,10 @@
 <script lang="ts" setup>
+  import { storeToRefs } from 'pinia'
   import { showToastError } from '../../../utils/handle.error'
+  import { useArticleStore } from '@/store/article'
+
+  const articleStore = useArticleStore()
+  const { articleList } = storeToRefs(articleStore)
 
   const lists = [
     {
@@ -13,9 +18,9 @@
     console.log(e)
     showToastError('none', '开发中...')
   }
-  const searchBtn = (e: any) => {
-    console.log(e)
-    showToastError('none', '开发中...')
+  const searchBtn = async (e: any) => {
+    articleList.value = []
+    return await articleStore.getArticleSearchAction(e)
   }
 </script>
 
@@ -47,6 +52,7 @@
         searchIconSize="40rpx"
         actionText="搜索"
         @custom="searchBtn"
+        @search="searchBtn"
         height="60rpx">
       </u-search>
     </div>

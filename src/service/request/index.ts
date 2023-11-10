@@ -25,7 +25,7 @@ class SJRequest {
         headers.Authorization = `Bearer ${token}`
       }
 
-      if (method == 'POST') {
+      if (method == 'POST' || method == 'DELETE') {
         headers.Authorization = `Bearer ${token}`
       }
 
@@ -80,10 +80,10 @@ class SJRequest {
     })
   }
 
-  get(config: any) {
+  delete(config: any) {
     return this.request({
       ...config,
-      method: 'GET',
+      method: 'DELETE',
     })
   }
 
@@ -91,6 +91,13 @@ class SJRequest {
     return this.request({
       ...config,
       method: 'PUT',
+    })
+  }
+
+  get(config: any) {
+    return this.request({
+      ...config,
+      method: 'GET',
     })
   }
 }

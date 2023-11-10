@@ -3,6 +3,8 @@ import {
   getArticleItem,
   getArticleList,
   postArticle,
+  getArticleSearch,
+  delArticle,
 } from '@/service/modules/home'
 
 export const useArticleStore = defineStore('article', {
@@ -17,6 +19,11 @@ export const useArticleStore = defineStore('article', {
       this.articleList = [...this.articleList, ...articleList.data]
       return this.articleList
     },
+    async getArticleSearchAction(search: string) {
+      const articleList: any = await getArticleSearch(search)
+      this.articleList = [...this.articleList, ...articleList.data]
+      return this.articleList
+    },
     async getArticleItemAction(id: string) {
       const articleItem: any = await getArticleItem(id)
       this.articleItem = articleItem.data
@@ -25,6 +32,10 @@ export const useArticleStore = defineStore('article', {
     async postArticlePublish(content: any) {
       const publishArticle: any = await postArticle(content)
       return publishArticle
+    },
+    async delArticleAction(id: string | number) {
+      const res: any = await delArticle(id)
+      return res
     },
   },
 })
