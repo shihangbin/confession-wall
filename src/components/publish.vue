@@ -1,5 +1,17 @@
 <script lang="ts" setup>
-  const publish = () => {
+  import { useUserStore } from '@/store/user'
+  import { storeToRefs } from 'pinia'
+  import { showToastError } from '@/utils/handle.error'
+
+  const userStore = useUserStore()
+  const { userInfo } = storeToRefs(userStore)
+
+  const publish = async () => {
+    await userStore.getUserAction()
+    if (userInfo.value.is_muted !== 0) {
+      showToastError('none', '你被禁言了')
+      return
+    }
     uni.navigateTo({
       url: '/pages-publish/article/article',
     })

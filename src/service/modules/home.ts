@@ -1,11 +1,18 @@
 import sjRequest from '..'
 
-export const getArticleList = (offset: number, size: number) => {
+export const getArticleList = (
+  offset: number,
+  size: number,
+  assort: number,
+  sort: string
+) => {
   return sjRequest.get({
     url: '/article',
     data: {
       offset: offset || 0,
       size: size || 5,
+      assort: assort || 1,
+      sort: sort || 'DESC',
     },
   })
 }

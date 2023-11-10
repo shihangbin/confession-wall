@@ -22,25 +22,30 @@
     scrollTop.value = e.scrollTop
   })
 
-  const getArticle = async (offset: number, size: number) => {
-    return await articleStore.getArticleListAction(offset, size)
+  const getArticle = async (
+    offset: number,
+    size: number,
+    assort: number,
+    sort: string
+  ) => {
+    return await articleStore.getArticleListAction(offset, size, assort, sort)
   }
 
   onLoad(async () => {
     articleList.value = []
-    await getArticle(0, 5)
+    await getArticle(0, 5, 1, 'DESC')
   })
 
   onReachBottom(async () => {
     // 当页面滚动到底部时触发
     offset.value += 5
-    await getArticle(offset.value, 5)
+    await getArticle(offset.value, 5, 1, 'DESC')
   })
 
   onPullDownRefresh(async () => {
     articleList.value = []
     offset.value = 0
-    const result = await getArticle(0, 5)
+    const result = await getArticle(0, 5, 1, 'DESC')
     if (result.length > 0) {
       uni.stopPullDownRefresh()
       return

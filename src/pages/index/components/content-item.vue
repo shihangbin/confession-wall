@@ -57,7 +57,10 @@
   const articleId = async (id: string | number) => {
     await userStore.getUserAction()
     show.value = !show.value
-    if (userInfo.value.id === props?.itemArticle?.user?.id) {
+    if (
+      userInfo.value.id === props?.itemArticle?.user?.id ||
+      userInfo.value.role == 'admin'
+    ) {
       for (const item of list.value) {
         item.disabled = false
       }

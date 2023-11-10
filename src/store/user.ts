@@ -5,10 +5,10 @@ export const useUserStore = defineStore('user', {
   state: () => ({
     userInfo: {
       id: 0,
-      username: '开朗的网友',
+      username: 'admin',
       password: '123456',
       avatar_path: '',
-      nickname: '请输入昵称...',
+      nickname: '开朗的网友',
       age: 99,
       role: 'user',
       is_muted: 0,

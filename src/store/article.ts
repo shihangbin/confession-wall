@@ -14,8 +14,13 @@ export const useArticleStore = defineStore('article', {
   }),
 
   actions: {
-    async getArticleListAction(offset: number, size: number) {
-      const articleList: any = await getArticleList(offset, size)
+    async getArticleListAction(
+      offset: number,
+      size: number,
+      assort: number,
+      sort: string
+    ) {
+      const articleList: any = await getArticleList(offset, size, assort, sort)
       this.articleList = [...this.articleList, ...articleList.data]
       return this.articleList
     },

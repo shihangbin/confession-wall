@@ -61,7 +61,7 @@
           uni.hideLoading()
           articleList.value = []
           await articleStore.getArticleListAction(0, 5)
-        }, 1000)
+        }, 500)
       }
     }
   }
