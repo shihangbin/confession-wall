@@ -10,6 +10,7 @@ import {
 export const useArticleStore = defineStore('article', {
   state: (): any => ({
     articleList: [],
+    studyList: [],
     articleItem: {},
   }),
 
@@ -23,6 +24,16 @@ export const useArticleStore = defineStore('article', {
       const articleList: any = await getArticleList(offset, size, assort, sort)
       this.articleList = [...this.articleList, ...articleList.data]
       return this.articleList
+    },
+    async getStudyListAction(
+      offset: number,
+      size: number,
+      assort: number,
+      sort: string
+    ) {
+      const studyList: any = await getArticleList(offset, size, assort, sort)
+      this.studyList = [...this.studyList, ...studyList.data]
+      return this.studyList
     },
     async getArticleSearchAction(search: string) {
       const articleList: any = await getArticleSearch(search)

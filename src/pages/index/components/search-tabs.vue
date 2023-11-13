@@ -1,7 +1,8 @@
 <script lang="ts" setup>
   import { storeToRefs } from 'pinia'
-  import { showToastError } from '../../../utils/handle.error'
   import { useArticleStore } from '@/store/article'
+
+  const emit = defineEmits(['tabs'])
 
   const articleStore = useArticleStore()
   const { articleList } = storeToRefs(articleStore)
@@ -11,12 +12,16 @@
       name: '最新',
     },
     {
-      name: '热门',
+      name: '最早',
     },
   ]
   const tabs = (e: any) => {
-    console.log(e)
-    showToastError('none', '开发中...')
+    if (e.index == 0) {
+      emit('tabs', e)
+    } else if (e.index == 1) {
+      // showToastError('none', '开发中...')
+      emit('tabs', e)
+    }
   }
   const searchBtn = async (e: any) => {
     articleList.value = []

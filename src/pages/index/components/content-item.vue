@@ -83,6 +83,10 @@
       }
     }
   }
+
+  const likeBtn = () => {
+    showToastError('none', '开发中...')
+  }
 </script>
 
 <template>
@@ -147,7 +151,11 @@
       <div class="bottom-time">
         {{ timeFormat(props.itemArticle?.publication_date) }}
       </div>
-      <div class="bottom-like">喜欢</div>
+      <div
+        class="bottom-like"
+        @click="likeBtn">
+        喜欢
+      </div>
     </div>
   </div>
 </template>

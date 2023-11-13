@@ -17,6 +17,7 @@
   const { articleList } = storeToRefs(articleStore)
   const offset = ref(0)
   const scrollTop = ref(0)
+  const groupBy = ref(0)
 
   onPageScroll((e) => {
     scrollTop.value = e.scrollTop
@@ -31,21 +32,38 @@
     return await articleStore.getArticleListAction(offset, size, assort, sort)
   }
 
+  const articleASC = async (e: any) => {
+    groupBy.value = e.index
+    await articleGroupBy()
+  }
+
+  const articleGroupBy = async () => {
+    if (groupBy.value == 0) {
+      articleList.value = []
+      return await getArticle(0, 5, 1, 'DESC')
+    } else if (groupBy.value == 1) {
+      articleList.value = []
+      return await getArticle(0, 5, 1, 'ASC')
+    }
+  }
+
   onLoad(async () => {
-    articleList.value = []
-    await getArticle(0, 5, 1, 'DESC')
+    await articleGroupBy()
   })
 
   onReachBottom(async () => {
     // 当页面滚动到底部时触发
     offset.value += 5
-    await getArticle(offset.value, 5, 1, 'DESC')
+    if (groupBy.value == 0) {
+      return await getArticle(offset.value, 5, 1, 'DESC')
+    } else if (groupBy.value == 1) {
+      return await getArticle(offset.value, 5, 1, 'ASC')
+    }
   })
 
   onPullDownRefresh(async () => {
-    articleList.value = []
     offset.value = 0
-    const result = await getArticle(0, 5, 1, 'DESC')
+    const result = await articleGroupBy()
     if (result.length > 0) {
       uni.stopPullDownRefresh()
       return
@@ -74,7 +92,7 @@
 </script>
 <template>
   <div class="index">
-    <search-tabs></search-tabs>
+    <search-tabs @tabs="articleASC"></search-tabs>
     <template
       v-for="item in articleList"
       :key="item.id">
