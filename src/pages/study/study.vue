@@ -1,8 +1,9 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useArticleStore } from '@/store/article'
-  import { onLoad, onReachBottom } from '@dcloudio/uni-app'
+  import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app'
   import { storeToRefs } from 'pinia'
+  import { showToastError } from '@/utils/handle.error'
 
   const articleStore = useArticleStore()
   const { studyList } = storeToRefs(articleStore)
@@ -20,24 +21,41 @@
 
   onLoad(async () => {
     studyList.value = []
-    await articleStore.getStudyListAction(0, 5, 1, 'DESC')
+    await articleStore.getStudyListAction(0, 5, 2, 'DESC')
   })
 
   onReachBottom(async () => {
     // 当页面滚动到底部时触发
     offset.value += 5
     if (groupBy.value == 0) {
-      return await getStudy(offset.value, 5, 1, 'DESC')
+      return await getStudy(offset.value, 5, 2, 'DESC')
     } else if (groupBy.value == 1) {
-      return await getStudy(offset.value, 5, 1, 'ASC')
+      return await getStudy(offset.value, 5, 2, 'ASC')
     }
+  })
+
+  onPullDownRefresh(async () => {
+    offset.value = 0
+    studyList.value = []
+
+    const result = await articleStore.getStudyListAction(0, 5, 2, 'DESC')
+
+    if (result.length > 0) {
+      uni.stopPullDownRefresh()
+      return
+    }
+    setTimeout(function () {
+      showToastError('none', '网络错误')
+      uni.stopPullDownRefresh()
+      return
+    }, 10000)
   })
 </script>
 
 <template>
   <div class="study">
     <template
-      v-for="item in studyList"
+      v-for="(item, index) in studyList"
       :key="item.id">
       <div class="item">
         <image
@@ -65,9 +83,19 @@
     margin: 0 auto;
     box-sizing: border-box;
     background-color: $u-info-light;
-    columns: 2;
+    -moz-column-count: 2;
+    /* Firefox */
+    -webkit-column-count: 2;
+    /* Safari 和 Chrome */
+    column-count: 2;
     column-gap: 10rpx;
+    -moz-column-gap: 10rpx;
+    -webkit-column-gap: 10rpx;
     .item {
+      -moz-page-break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
+      break-inside: avoid;
       margin-bottom: 10rpx;
       border-radius: 8rpx;
       overflow: hidden;
