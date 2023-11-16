@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { onLoad } from '@dcloudio/uni-app'
   import { useArticleStore } from '../../../store/article'
@@ -17,6 +18,9 @@
       current: index,
     })
   }
+
+  const time = ref('')
+  time.value = timeFormat(articleItem?.value.publication_date)
 </script>
 
 <template>
@@ -29,7 +33,13 @@
         </image>
         <div class="info">
           <div class="name">{{ articleItem?.user?.nickname }}</div>
-          <div>{{ timeFormat(articleItem?.publication_date) }}</div>
+          <div class="time">
+            <uni-dateformat
+              :date="time"
+              format="yyyy-MM-dd hh:mm"
+              :threshold="[60000, 3600000]">
+            </uni-dateformat>
+          </div>
         </div>
       </div>
       <div class="content">
@@ -39,22 +49,24 @@
           :text="articleItem?.content">
         </up-text>
       </div>
-      <up-image
-        v-if="articleItem?.image_urls?.length == 1"
-        :show-loading="true"
-        :src="articleItem?.image_urls"
-        width="710"
-        height="500"
-        mode="aspectFill"
-        @click="previewImage(1, articleItem?.image_urls)">
-      </up-image>
-      <u-album
-        v-else-if="articleItem?.image_urls?.length > 1"
-        :urls="articleItem?.image_urls"
-        rowCount="3"
-        maxCount="9"
-        multipleSize="230">
-      </u-album>
+      <template v-if="articleItem?.image_urls[0] == 'null'">
+        <up-image
+          v-if="articleItem?.image_urls?.length == 1"
+          :show-loading="true"
+          :src="articleItem?.image_urls"
+          width="710"
+          height="500"
+          mode="aspectFill"
+          @click="previewImage(1, articleItem?.image_urls)">
+        </up-image>
+        <u-album
+          v-else-if="articleItem?.image_urls?.length > 1"
+          :urls="articleItem?.image_urls"
+          rowCount="3"
+          maxCount="9"
+          multipleSize="230">
+        </u-album>
+      </template>
     </div>
     <div class="comment">
       <div class="title">评论：</div>
@@ -78,8 +90,8 @@
 <style lang="scss" scoped>
   .article {
     width: 100%;
-    // height: 100vh;
-    padding-bottom: 660rpx;
+    min-height: 100vh;
+    padding-bottom: 200rpx;
     background-color: $u-info-light;
     .article-content {
       width: 100%;
@@ -105,11 +117,15 @@
           .name {
             font-weight: 700;
           }
+          .time {
+            margin-top: 10rpx;
+            font-size: 26rpx;
+          }
         }
       }
       .content {
         text-align: justify;
-        letter-spacing: 5rpx;
+        letter-spacing: 3rpx;
         margin: 30rpx 0;
         box-sizing: border-box;
       }

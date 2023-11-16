@@ -87,6 +87,8 @@
   const likeBtn = () => {
     showToastError('none', '开发中...')
   }
+  const time = ref('')
+  time.value = timeFormat(props.itemArticle?.publication_date)
 </script>
 
 <template>
@@ -101,7 +103,7 @@
       </div>
       <div class="top-center">
         <div class="top-name">{{ props.itemArticle?.user?.nickname }}</div>
-        <div class="top-city">位置</div>
+        <!-- <div class="top-city">位置</div> -->
       </div>
       <div class="top-btn">
         <u-icon
@@ -149,7 +151,11 @@
     </div>
     <div class="content-bottom">
       <div class="bottom-time">
-        {{ timeFormat(props.itemArticle?.publication_date) }}
+        <uni-dateformat
+          :date="time"
+          format="yyyy-MM-dd hh:mm"
+          :threshold="[60000, 3600000]">
+        </uni-dateformat>
       </div>
       <div
         class="bottom-like"
@@ -163,7 +169,7 @@
 <style lang="scss" scoped>
   .content-block {
     background: #fff;
-    padding: 10rpx;
+    padding: 20rpx;
     margin: 20rpx;
     margin-bottom: 30rpx;
     border-radius: 20rpx;
@@ -177,6 +183,7 @@
       justify-content: space-between;
       width: 100%;
       height: 120rpx;
+      padding-bottom: 10rpx;
       // background: #eee;
       .top-avatar {
         width: 100rpx;
@@ -193,8 +200,11 @@
       .top-center {
         display: flex;
         flex-direction: column;
-        margin-left: 20rpx;
+        margin-left: 30rpx;
         flex: 1;
+        .top-name {
+          font-weight: 700;
+        }
       }
       .top-btn {
         padding: 10rpx;
@@ -227,6 +237,10 @@
       width: 100%;
       height: 66rpx;
       // background: #bbb;
+      .bottom-time {
+        font-size: 26rpx;
+        text-align: center;
+      }
     }
   }
 </style>

@@ -15,6 +15,7 @@
   const { studyList } = storeToRefs(articleStore)
   const offset = ref(0)
   const groupBy = ref(0)
+  const uniLoad = ref('more')
 
   const getStudy = async (
     offset: number,
@@ -32,11 +33,19 @@
 
   onReachBottom(async () => {
     // 当页面滚动到底部时触发
+    uniLoad.value = 'loading'
     offset.value += 5
     if (groupBy.value == 0) {
-      return await getStudy(offset.value, 5, 2, 'DESC')
+      await getStudy(offset.value, 5, 2, 'DESC')
     } else if (groupBy.value == 1) {
-      return await getStudy(offset.value, 5, 2, 'ASC')
+      await getStudy(offset.value, 5, 2, 'ASC')
+    }
+    if (studyList.value.length == studyList.value.length) {
+      setTimeout(() => {
+        uniLoad.value = 'noMore'
+        uni.stopPullDownRefresh()
+      }, 5000)
+      return
     }
   })
 
@@ -89,26 +98,33 @@
 
 <template>
   <div class="study">
-    <template
-      v-for="(item, index) in studyList"
-      :key="item.id">
-      <div
-        class="item"
-        @click="toDetails(item.id)">
-        <image
-          style="width: 100%"
-          :src="item.image_urls[0]"
-          mode="widthFix">
-        </image>
-        <div class="content">
-          <up-text
-            size="26"
-            :lines="2"
-            :text="item.content">
-          </up-text>
+    <div class="study-content">
+      <template
+        v-for="(item, index) in studyList"
+        :key="item.id">
+        <div
+          class="item"
+          @click="toDetails(item.id)">
+          <template v-if="item.image_urls[0] !== null">
+            <image
+              style="width: 100%"
+              :src="item.image_urls[0]"
+              mode="widthFix">
+            </image>
+          </template>
+          <div class="content">
+            <up-text
+              size="26"
+              :lines="5"
+              :text="item.content">
+            </up-text>
+          </div>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
+    <div>
+      <uni-load-more :status="uniLoad"></uni-load-more>
+    </div>
     <up-back-top
       :scroll-top="scrollTop"
       bottom="250rpx"
@@ -118,7 +134,10 @@
       :customStyle="customStyle"
       top="600">
     </up-back-top>
-    <com-publish :toUrl="url"></com-publish>
+    <com-publish
+      :toUrl="url"
+      icon="edit-pen">
+    </com-publish>
   </div>
 </template>
 
@@ -130,30 +149,31 @@
     margin: 0 auto;
     box-sizing: border-box;
     background-color: $u-info-light;
-    -moz-column-count: 2;
-    /* Firefox */
-    -webkit-column-count: 2;
-    /* Safari 和 Chrome */
-    column-count: 2;
-    column-gap: 10rpx;
-    -moz-column-gap: 10rpx;
-    -webkit-column-gap: 10rpx;
-    padding-bottom: 500rpx;
-    .item {
-      -moz-page-break-inside: avoid;
-      -webkit-column-break-inside: avoid;
-      page-break-inside: avoid;
-      break-inside: avoid;
-      margin-bottom: 10rpx;
-      border-radius: 8rpx;
-      overflow: hidden;
-      background-color: #fff;
-      // box-shadow: 0rpx 0rpx 18rpx 0rpx #c3c3e5;
-      border: 1rpx solid #c7c1ed;
-      .content {
-        text-align: justify;
-        letter-spacing: 5rpx;
-        padding: 10rpx;
+    padding-bottom: 50rpx;
+    .study-content {
+      -moz-column-count: 2;
+      -webkit-column-count: 2;
+      column-count: 2;
+      column-gap: 10rpx;
+      -moz-column-gap: 10rpx;
+      -webkit-column-gap: 10rpx;
+      .item {
+        -moz-page-break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 10rpx;
+        border-radius: 8rpx;
+        overflow: hidden;
+        background-color: #fff;
+        // box-shadow: 0rpx 0rpx 18rpx 0rpx #c3c3e5;
+        // border: 1rpx solid #c7c1ed;
+        border: 1rpx solid $u-info;
+        .content {
+          text-align: justify;
+          letter-spacing: 5rpx;
+          padding: 10rpx;
+        }
       }
     }
   }

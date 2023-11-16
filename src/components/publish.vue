@@ -11,6 +11,10 @@
       type: String,
       default: '',
     },
+    icon: {
+      type: String,
+      default: 'trash',
+    },
   })
 
   const publish = async () => {
@@ -19,8 +23,9 @@
       showToastError('none', '你被禁言了')
       return
     }
-    console.log(props.toUrl)
-
+    if (props.toUrl == '') {
+      return
+    }
     uni.navigateTo({
       url: props.toUrl,
     })
@@ -32,8 +37,9 @@
     <div class="announce">
       <u-icon
         @click="publish"
-        name="edit-pen-fill"
-        color="#fff">
+        :name="props.icon"
+        color="#fff"
+        size="40">
       </u-icon>
     </div>
   </div>

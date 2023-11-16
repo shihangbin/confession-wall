@@ -19,12 +19,12 @@
     <user-item
       leftIcon="file-text"
       title="我的文章"
-      @click="articleBtn">
+      @tap="articleBtn">
     </user-item>
     <user-item
       leftIcon="thumb-up"
       title="我的点赞"
-      @click="likeBtn">
+      @tap="likeBtn">
     </user-item>
   </div>
 </template>

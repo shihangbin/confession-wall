@@ -18,6 +18,7 @@
   const offset = ref(0)
   const scrollTop = ref(0)
   const groupBy = ref(0)
+  const uniLoad = ref('more')
 
   onPageScroll((e) => {
     scrollTop.value = e.scrollTop
@@ -53,11 +54,19 @@
 
   onReachBottom(async () => {
     // 当页面滚动到底部时触发
+    uniLoad.value = 'loading'
     offset.value += 5
     if (groupBy.value == 0) {
-      return await getArticle(offset.value, 5, 1, 'DESC')
+      await getArticle(offset.value, 5, 1, 'DESC')
     } else if (groupBy.value == 1) {
-      return await getArticle(offset.value, 5, 1, 'ASC')
+      await getArticle(offset.value, 5, 1, 'ASC')
+    }
+    if (articleList.value.length == articleList.value.length) {
+      setTimeout(() => {
+        uniLoad.value = 'noMore'
+        uni.stopPullDownRefresh()
+      }, 5000)
+      return
     }
   })
 
@@ -99,6 +108,9 @@
       :key="item.id">
       <content-item :itemArticle="item"></content-item>
     </template>
+    <div>
+      <uni-load-more :status="uniLoad"></uni-load-more>
+    </div>
     <up-back-top
       :scroll-top="scrollTop"
       bottom="250rpx"
@@ -108,7 +120,10 @@
       :customStyle="customStyle"
       top="600">
     </up-back-top>
-    <com-publish :toUrl="url"></com-publish>
+    <com-publish
+      :toUrl="url"
+      icon="edit-pen">
+    </com-publish>
   </div>
 </template>
 
@@ -117,7 +132,7 @@
     min-height: calc(100vh - var(--window-top));
     background-color: $u-bg-color;
     // margin-bottom: 50rpx;
-    padding-bottom: 500rpx;
+    padding-bottom: 200rpx;
     box-sizing: border-box;
   }
 </style>
