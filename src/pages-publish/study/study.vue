@@ -83,6 +83,7 @@
         <u-textarea
           v-model="content"
           placeholder="请输入内容"
+          maxlength="520"
           autoHeight
           focus
           count>

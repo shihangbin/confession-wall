@@ -1,10 +1,10 @@
 <script setup lang="ts">
   const list = [
     {
-      name: '表白区',
+      name: '首页',
     },
     {
-      name: '学习区',
+      name: '匿名区',
     },
   ]
 </script>

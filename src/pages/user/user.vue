@@ -2,13 +2,30 @@
   import userInfo from './components/user-info.vue'
   import userAssist from './components/user-assist.vue'
   import userItem from './components/user-item.vue'
+  import { showToastError } from '@/utils/handle.error'
+
+  const articleBtn = () => {
+    showToastError('none', '开发中...')
+  }
+  const likeBtn = () => {
+    showToastError('none', '开发中...')
+  }
 </script>
 
 <template>
   <div class="user">
     <user-info></user-info>
     <user-assist></user-assist>
-    <user-item></user-item>
+    <user-item
+      leftIcon="file-text"
+      title="我的文章"
+      @click="articleBtn">
+    </user-item>
+    <user-item
+      leftIcon="thumb-up"
+      title="我的点赞"
+      @click="likeBtn">
+    </user-item>
   </div>
 </template>
 

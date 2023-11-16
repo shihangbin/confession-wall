@@ -82,6 +82,7 @@
       <div class="article-content">
         <u-textarea
           v-model="content"
+          maxlength="520"
           placeholder="请输入内容"
           autoHeight
           focus

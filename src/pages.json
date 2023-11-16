@@ -12,7 +12,7 @@
     {
       "path": "pages/index/index",
       "style": {
-        "navigationBarTitleText": "表白区",
+        "navigationBarTitleText": "能源表白墙",
         "navigationBarBackgroundColor": "#fff",
         "enablePullDownRefresh": true
       }
@@ -28,7 +28,15 @@
     {
       "path": "pages/study/study",
       "style": {
-        "navigationBarTitleText": "学习区",
+        "navigationBarTitleText": "匿名区",
+        "navigationBarBackgroundColor": "#fff",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/study/details/details",
+      "style": {
+        "navigationBarTitleText": "匿名区",
         "navigationBarBackgroundColor": "#fff",
         "enablePullDownRefresh": true
       }
@@ -128,13 +136,13 @@
         "pagePath": "pages/index/index",
         "iconPath": "static/tabBar/index.png",
         "selectedIconPath": "static/tabBar/index-active.png",
-        "text": "表白区"
+        "text": "首页"
       },
       {
         "pagePath": "pages/study/study",
         "iconPath": "/static/tabBar/study.png",
         "selectedIconPath": "/static/tabBar/study-active.png",
-        "text": "学习区"
+        "text": "匿名"
       },
       {
         "pagePath": "pages/user/user",

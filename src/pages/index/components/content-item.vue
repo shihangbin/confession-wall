@@ -163,11 +163,13 @@
 <style lang="scss" scoped>
   .content-block {
     background: #fff;
-    margin: 20rpx;
     padding: 10rpx;
+    margin: 20rpx;
+    margin-bottom: 30rpx;
     border-radius: 20rpx;
     overflow: hidden;
-    box-shadow: 0rpx 0rpx 8rpx 0rpx #c3c3e5;
+    // box-shadow: 0rpx 0rpx 8rpx 0rpx #c3c3e5;
+    box-shadow: 0rpx 0rpx 18rpx 0rpx #c3c3e5;
     box-sizing: border-box;
     .content-top {
       display: flex;

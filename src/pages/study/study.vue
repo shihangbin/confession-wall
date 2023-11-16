@@ -57,6 +57,13 @@
     }, 10000)
   })
 
+  const toDetails = (id: string | number) => {
+    //在起始页面跳转到test.vue页面并传递参数
+    uni.navigateTo({
+      url: `/pages/study/details/details?id=${id}`,
+    })
+  }
+
   const scrollTop = ref(0)
 
   onPageScroll((e) => {
@@ -85,7 +92,9 @@
     <template
       v-for="(item, index) in studyList"
       :key="item.id">
-      <div class="item">
+      <div
+        class="item"
+        @click="toDetails(item.id)">
         <image
           style="width: 100%"
           :src="item.image_urls[0]"
@@ -129,6 +138,7 @@
     column-gap: 10rpx;
     -moz-column-gap: 10rpx;
     -webkit-column-gap: 10rpx;
+    padding-bottom: 500rpx;
     .item {
       -moz-page-break-inside: avoid;
       -webkit-column-break-inside: avoid;
@@ -138,6 +148,8 @@
       border-radius: 8rpx;
       overflow: hidden;
       background-color: #fff;
+      // box-shadow: 0rpx 0rpx 18rpx 0rpx #c3c3e5;
+      border: 1rpx solid #c7c1ed;
       .content {
         text-align: justify;
         letter-spacing: 5rpx;

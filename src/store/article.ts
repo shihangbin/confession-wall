@@ -12,6 +12,7 @@ export const useArticleStore = defineStore('article', {
     articleList: [],
     studyList: [],
     articleItem: {},
+    studyItem: {},
   }),
 
   actions: {
@@ -44,6 +45,11 @@ export const useArticleStore = defineStore('article', {
       const articleItem: any = await getArticleItem(id)
       this.articleItem = articleItem.data
       return this.articleItem
+    },
+    async getStudyItemAction(id: string) {
+      const studyItem: any = await getArticleItem(id)
+      this.studyItem = studyItem.data
+      return this.studyItem
     },
     async postArticlePublish(content: any, assort: number) {
       const publishArticle: any = await postArticle(content, assort)

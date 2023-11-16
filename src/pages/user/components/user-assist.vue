@@ -1,30 +1,69 @@
 <script setup lang="ts">
+  import { ref } from 'vue'
+  import { showToastError } from '@/utils/handle.error'
+
   const toSignUP = () => {
-    uni.navigateTo({
-      url: '/pages-login/sign-up/sign-up',
-    })
+    // uni.navigateTo({
+    //   url: '/pages-login/sign-up/sign-up',
+    // })
+    showToastError('none', '开发中...')
   }
   const toLogin = () => {
-    uni.navigateTo({
-      url: '/pages-login/login/login',
-    })
+    // uni.navigateTo({
+    //   url: '/pages-login/login/login',
+    // })
+    showToastError('none', '开发中...')
+  }
+
+  const show = ref(false)
+  const open = () => {
+    show.value = !show.value
+  }
+  const close = () => {
+    show.value = false
   }
 </script>
 
 <template>
   <div class="user-assist">
-    <div class="user-left">左边</div>
+    <div
+      class="user-left"
+      @click="open">
+      <u-icon
+        name="chat"
+        size="45">
+      </u-icon>
+      <span class="text">交流群</span>
+    </div>
     <div
       class="user-center"
       @click="toLogin">
-      中间
+      <u-icon
+        name="coupon"
+        size="45">
+      </u-icon>
+      <span class="text">作者</span>
     </div>
     <div
       class="user-right"
       @click="toSignUP">
-      右边
+      <u-icon
+        name="coupon"
+        size="45">
+      </u-icon>
+      <span class="text">关于</span>
     </div>
   </div>
+  <u-popup
+    :show="show"
+    mode="center"
+    @close="close">
+    <image
+      style="width: 600rpx; height: 800rpx"
+      mode="aspectFill"
+      src="https://img.xbin.cn/images/2023/11/16-20-26-43e488.jpg">
+    </image>
+  </u-popup>
 </template>
 
 <style lang="scss" scoped>
@@ -38,5 +77,26 @@
     margin: 20rpx 0;
     border-radius: 20rpx;
     box-shadow: 0rpx 0rpx 8rpx 0rpx #c3c3e5;
+    box-sizing: border-box;
+    .user-left,
+    .user-center,
+    .user-right {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .text {
+      color: $u-info-dark;
+      font-size: 26rpx;
+      margin-top: 10rpx;
+    }
+  }
+  .wx {
+    width: 500rpx;
+    height: 700rpx;
+    .wx-img {
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>
