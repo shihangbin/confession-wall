@@ -6,14 +6,23 @@
   const userStore = useUserStore()
   const { userInfo } = storeToRefs(userStore)
 
+  const props = defineProps({
+    toUrl: {
+      type: String,
+      default: '',
+    },
+  })
+
   const publish = async () => {
     await userStore.getUserAction()
     if (userInfo.value.is_muted !== 0) {
       showToastError('none', '你被禁言了')
       return
     }
+    console.log(props.toUrl)
+
     uni.navigateTo({
-      url: '/pages-publish/article/article',
+      url: props.toUrl,
     })
   }
 </script>

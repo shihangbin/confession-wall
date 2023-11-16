@@ -1,9 +1,15 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
   import { useArticleStore } from '@/store/article'
-  import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app'
+  import {
+    onLoad,
+    onPageScroll,
+    onPullDownRefresh,
+    onReachBottom,
+  } from '@dcloudio/uni-app'
   import { storeToRefs } from 'pinia'
   import { showToastError } from '@/utils/handle.error'
+  import comPublish from '@/components/publish.vue'
 
   const articleStore = useArticleStore()
   const { studyList } = storeToRefs(articleStore)
@@ -50,6 +56,28 @@
       return
     }, 10000)
   })
+
+  const scrollTop = ref(0)
+
+  onPageScroll((e) => {
+    scrollTop.value = e.scrollTop
+  })
+
+  const customStyle = {
+    width: '100rpx',
+    height: '100rpx',
+  }
+  const iconStyle = {
+    width: '100rpx',
+    height: '100rpx',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: 'linear-gradient(to top, #fbc2eb 0%, #a6c1ee 100%)',
+    borderRadius: '50%',
+    color: '#fff',
+  }
+  const url = '/pages-publish/study/study'
 </script>
 
 <template>
@@ -72,6 +100,16 @@
         </div>
       </div>
     </template>
+    <up-back-top
+      :scroll-top="scrollTop"
+      bottom="250rpx"
+      right="66rpx"
+      icon="arrow-up"
+      :iconStyle="iconStyle"
+      :customStyle="customStyle"
+      top="600">
+    </up-back-top>
+    <com-publish :toUrl="url"></com-publish>
   </div>
 </template>
 

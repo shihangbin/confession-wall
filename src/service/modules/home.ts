@@ -32,11 +32,12 @@ export const getArticleItem = (id: string) => {
   })
 }
 
-export const postArticle = (content: any) => {
+export const postArticle = (content: any, assort: number) => {
   return sjRequest.post({
     url: `/article`,
     data: {
       content: content,
+      assort: assort,
     },
   })
 }

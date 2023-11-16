@@ -89,6 +89,7 @@
     borderRadius: '50%',
     color: '#fff',
   }
+  const url = '/pages-publish/article/article'
 </script>
 <template>
   <div class="index">
@@ -107,7 +108,7 @@
       :customStyle="customStyle"
       top="600">
     </up-back-top>
-    <com-publish></com-publish>
+    <com-publish :toUrl="url"></com-publish>
   </div>
 </template>
 

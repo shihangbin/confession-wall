@@ -45,8 +45,12 @@ export const useArticleStore = defineStore('article', {
       this.articleItem = articleItem.data
       return this.articleItem
     },
-    async postArticlePublish(content: any) {
-      const publishArticle: any = await postArticle(content)
+    async postArticlePublish(content: any, assort: number) {
+      const publishArticle: any = await postArticle(content, assort)
+      return publishArticle
+    },
+    async postStudyPublish(content: any, assort: number) {
+      const publishArticle: any = await postArticle(content, assort)
       return publishArticle
     },
     async delArticleAction(id: string | number) {

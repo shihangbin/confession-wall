@@ -5,7 +5,7 @@
   import { storeToRefs } from 'pinia'
 
   const articleStore = useArticleStore()
-  const { articleList } = storeToRefs(articleStore)
+  const { studyList } = storeToRefs(articleStore)
   const content = ref('')
   const fileList: any = ref([])
   const imgArray: any = ref([])
@@ -30,7 +30,7 @@
       )
     }
   }
-  const publishArticle = async () => {
+  const publishStudy = async () => {
     if (content.value.length < 2) {
       showToastError('none', '字数少于二')
       return
@@ -42,7 +42,7 @@
       typeof res === 'undefined' ||
       imgI.value.length === imgArray.value.length
     ) {
-      const result = await articleStore.postArticlePublish(content.value, 1)
+      const result = await articleStore.postStudyPublish(content.value, 2)
       const code = result.code
       const msg = result.message
 
@@ -56,11 +56,11 @@
 
         setTimeout(async () => {
           uni.switchTab({
-            url: '/pages/index/index',
+            url: '/pages/study/study',
           })
           uni.hideLoading()
-          articleList.value = []
-          await articleStore.getArticleListAction(0, 5)
+          studyList.value = []
+          await articleStore.getStudyListAction(0, 5, 2, 'DESC')
         }, 500)
       }
     }
@@ -77,9 +77,9 @@
 </script>
 
 <template>
-  <div class="article">
+  <div class="study">
     <div class="content">
-      <div class="article-content">
+      <div class="study-content">
         <u-textarea
           v-model="content"
           placeholder="请输入内容"
@@ -88,7 +88,7 @@
           count>
         </u-textarea>
       </div>
-      <div class="article-images">
+      <div class="study-images">
         <uni-file-picker
           v-model="fileList"
           fileMediatype="image"
@@ -98,7 +98,7 @@
       </div>
     </div>
     <up-button
-      @click="publishArticle"
+      @click="publishStudy"
       text="发布文章"
       shape="circle"
       color="#d2c1ec">
@@ -107,12 +107,12 @@
 </template>
 
 <style lang="scss" scoped>
-  .article {
+  .study {
     padding: 20rpx;
     .content {
       margin-bottom: 40rpx;
-      .article-content,
-      .article-images {
+      .study-content,
+      .study-images {
         margin-top: 20rpx;
       }
     }

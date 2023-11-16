@@ -90,6 +90,13 @@
             "enablePullDownRefresh": false,
             "navigationBarTitleText": "文章发布"
           }
+        },
+        {
+          "path": "study/study",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarTitleText": "匿名发布"
+          }
         }
       ]
     }
@@ -104,6 +111,10 @@
       "packages": ["pages-login"]
     },
     "pages-publish/article/article": {
+      "network": "all",
+      "packages": ["pages-publish"]
+    },
+    "pages-publish/study/study": {
       "network": "all",
       "packages": ["pages-publish"]
     }
