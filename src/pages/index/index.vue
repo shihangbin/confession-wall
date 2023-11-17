@@ -65,7 +65,7 @@
       setTimeout(() => {
         uniLoad.value = 'noMore'
         uni.stopPullDownRefresh()
-      }, 5000)
+      }, 2000)
       return
     }
   })

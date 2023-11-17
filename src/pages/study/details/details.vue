@@ -15,6 +15,7 @@
   const isPublish = ref(false)
 
   onLoad(async (option: any) => {
+    await userStore.getUserAction()
     await articleStore.getStudyItemAction(option.id)
     if (studyItem?.value?.user.id === userInfo?.value.id) {
       isPublish.value = !isPublish.value

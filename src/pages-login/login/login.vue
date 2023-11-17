@@ -52,12 +52,40 @@
   }
 
   const show = ref(false)
-  const open = () => {
-    // console.log('open');
-  }
+
   const close = () => {
     show.value = false
-    // console.log('close');
+  }
+  const wxLoginBtn = () => {
+    uni.login({
+      provider: 'weixin', //使用微信登录
+      success: function (loginRes) {
+        uni
+          .request({
+            url: 'https://api.xbin.cn/login/wx',
+            method: 'POST',
+            data: {
+              code: loginRes.code,
+            },
+          })
+          .then((res: any) => {
+            res = res.data
+            const { openid } = res.data
+
+            uni.setStorageSync('openid', openid)
+            uni.setStorageSync('token', res.token)
+
+            if (res.code === 0) {
+              setTimeout(() => {
+                uni.switchTab({
+                  url: '/pages/index/index',
+                })
+              }, 1000)
+            }
+            // const token = uni.getStorageSync('token')
+          })
+      },
+    })
   }
 </script>
 
@@ -117,7 +145,7 @@
           </div>
           <div class="login-btn">
             <u-button
-              text="登录"
+              text="密码登录"
               type="primary"
               shape="circle"
               @click="loginBtn">
@@ -126,11 +154,18 @@
         </div>
       </div>
     </div>
+    <div class="wx-login">
+      <u-button
+        text="微信一键登录"
+        type="primary"
+        shape="circle"
+        @click="wxLoginBtn">
+      </u-button>
+    </div>
     <u-popup
       :show="show"
       mode="center"
-      @close="close"
-      @open="open">
+      @close="close">
       <div class="wx">
         <img
           class="wx-img"
@@ -171,6 +206,10 @@
           margin-right: 20rpx;
         }
       }
+    }
+    .wx-login {
+      width: 80%;
+      margin-top: 50rpx;
     }
     .wx {
       width: 500rpx;

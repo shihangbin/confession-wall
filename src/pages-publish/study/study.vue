@@ -20,7 +20,7 @@
       const token = uni.getStorageSync('token')
       imgI.value.push(
         await uni.uploadFile({
-          url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
+          url: 'https://api.xbin.cn/article/images',
           filePath: item,
           name: 'file',
           header: {
@@ -33,6 +33,10 @@
   const publishStudy = async () => {
     if (content.value.length < 2) {
       showToastError('none', '字数少于二')
+      return
+    }
+    if (imgArray.value.length !== 1) {
+      showToastError('none', '必须包含图片')
       return
     }
 
@@ -70,7 +74,6 @@
   const select = (e: any) => {
     imgArray.value = e.tempFilePaths
   }
-  // 获取上传进度
   const remove = (e: any) => {
     imgArray.value.splice(imgArray.value.indexOf(e.tempFilePath), 1)
   }

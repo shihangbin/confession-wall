@@ -10,6 +10,15 @@ export const login = (user: string, pwd: string) => {
   })
 }
 
+export const wxLogin = (code: string) => {
+  return sjRequest.post({
+    url: '/login/wx',
+    data: {
+      code: code,
+    },
+  })
+}
+
 export const user = () => {
   return sjRequest.get({
     url: `/login/user`,

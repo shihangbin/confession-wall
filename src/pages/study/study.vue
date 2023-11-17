@@ -44,7 +44,7 @@
       setTimeout(() => {
         uniLoad.value = 'noMore'
         uni.stopPullDownRefresh()
-      }, 5000)
+      }, 2000)
       return
     }
   })
@@ -149,7 +149,7 @@
     margin: 0 auto;
     box-sizing: border-box;
     background-color: $u-info-light;
-    padding-bottom: 50rpx;
+    padding-bottom: 200rpx;
     .study-content {
       -moz-column-count: 2;
       -webkit-column-count: 2;
@@ -169,6 +169,7 @@
         // box-shadow: 0rpx 0rpx 18rpx 0rpx #c3c3e5;
         // border: 1rpx solid #c7c1ed;
         border: 1rpx solid $u-info;
+        box-sizing: border-box;
         .content {
           text-align: justify;
           letter-spacing: 5rpx;

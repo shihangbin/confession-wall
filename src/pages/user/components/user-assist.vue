@@ -2,17 +2,16 @@
   import { ref } from 'vue'
   import { showToastError } from '@/utils/handle.error'
 
-  const toSignUP = () => {
+  const toAbout = () => {
     // uni.navigateTo({
     //   url: '/pages-login/sign-up/sign-up',
     // })
     showToastError('none', '开发中...')
   }
   const toLogin = () => {
-    // uni.navigateTo({
-    //   url: '/pages-login/login/login',
-    // })
-    showToastError('none', '开发中...')
+    uni.navigateTo({
+      url: '/pages-login/login/login',
+    })
   }
 
   const show = ref(false)
@@ -33,25 +32,25 @@
         name="chat"
         size="45">
       </u-icon>
-      <span class="text">交流群</span>
+      <span class="text">交流/反馈</span>
     </div>
     <div
       class="user-center"
-      @click="toLogin">
+      @click="toAbout">
       <u-icon
         name="coupon"
         size="45">
       </u-icon>
-      <span class="text">作者</span>
+      <span class="text">作者/关于</span>
     </div>
     <div
       class="user-right"
-      @click="toSignUP">
+      @click="toLogin">
       <u-icon
-        name="coupon"
+        name="lock"
         size="45">
       </u-icon>
-      <span class="text">关于</span>
+      <span class="text">登录/注册</span>
     </div>
   </div>
   <u-popup
