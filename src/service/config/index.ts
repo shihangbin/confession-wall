@@ -10,6 +10,6 @@ if (import.meta.env.PROD) {
 
 const TIMEOUT = 10000
 
-const WHITE_API = ['/article', '/login', '/user']
+const WHITE_API = ['/article', '/login', '/user', '/comment']
 
 export { BASE_URL, TIMEOUT, WHITE_API }

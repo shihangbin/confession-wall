@@ -35,7 +35,8 @@
       showToastError('none', '字数少于二')
       return
     }
-    if (imgArray.value.length !== 1) {
+
+    if (imgArray.value.length === 0) {
       showToastError('none', '必须包含图片')
       return
     }

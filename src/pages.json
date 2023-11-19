@@ -53,9 +53,6 @@
       "path": "pages/user/user/user",
       "style": {
         "enablePullDownRefresh": false,
-        "navigationBarRightButton": {
-          "hide": true
-        },
         "navigationStyle": "custom"
       }
     },

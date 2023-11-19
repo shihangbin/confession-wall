@@ -17,6 +17,12 @@ export const getArticleList = (
   })
 }
 
+export const getCommentList = (articleId: number) => {
+  return sjRequest.get({
+    url: `/comment/${articleId}`,
+  })
+}
+
 export const getArticleSearch = (search: string) => {
   return sjRequest.get({
     url: '/article/search',
@@ -38,6 +44,16 @@ export const postArticle = (content: any, assort: number) => {
     data: {
       content: content,
       assort: assort,
+    },
+  })
+}
+
+export const postComment = (content: any, articleId: number) => {
+  return sjRequest.post({
+    url: `/comment`,
+    data: {
+      content: content,
+      articleId: articleId,
     },
   })
 }

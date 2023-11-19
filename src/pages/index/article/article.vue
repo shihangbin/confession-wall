@@ -4,12 +4,14 @@
   import { onLoad } from '@dcloudio/uni-app'
   import { useArticleStore } from '../../../store/article'
   import { timeFormat } from '@/utils/dayjs'
+  import { showToastError } from '@/utils/handle.error'
 
   const articleStore = useArticleStore()
-  const { articleItem } = storeToRefs(articleStore)
+  const { articleItem, commentList } = storeToRefs(articleStore)
 
   onLoad(async (option: any) => {
     await articleStore.getArticleItemAction(option.id)
+    await articleStore.getCommentListAction(option.id)
   })
 
   const previewImage = (index: number, itemArr: any) => {
@@ -21,16 +23,35 @@
 
   const time = ref('')
   time.value = timeFormat(articleItem?.value.publication_date)
+
+  const commentValue = ref('')
+
+  const confirm = async (e: any) => {
+    const result = await articleStore.postCommentPublish(
+      commentValue.value,
+      articleItem.value.id
+    )
+    if (result.code === 0) {
+      commentValue.value = ''
+      await articleStore.getCommentListAction(articleItem.value.id)
+      showToastError('none', '评论成功')
+    }
+  }
 </script>
 
 <template>
   <div class="article">
     <div class="article-content">
       <div class="user">
-        <image
-          class="avatar"
-          :src="articleItem?.user?.avatar_path">
-        </image>
+        <div class="avatar">
+          <image
+            :style="{
+              width: '100rpx',
+              height: '100rpx',
+            }"
+            :src="articleItem?.user?.avatar_path">
+          </image>
+        </div>
         <div class="info">
           <div class="name">{{ articleItem?.user?.nickname }}</div>
           <div class="time">
@@ -49,7 +70,7 @@
           :text="articleItem?.content">
         </up-text>
       </div>
-      <template v-if="articleItem?.image_urls[0] == 'null'">
+      <template v-if="articleItem?.image_urls[0] !== null">
         <up-image
           v-if="articleItem?.image_urls?.length == 1"
           :show-loading="true"
@@ -70,19 +91,38 @@
     </div>
     <div class="comment">
       <div class="title">评论：</div>
-      <div class="item">
-        <div class="avatar">头像</div>
-        <div class="messages">
-          <div class="user">昵称</div>
-          <div class="content">
-            <up-text
-              size="32"
-              lineHeight="50"
-              text="开发中...">
-            </up-text>
+      <template
+        v-for="item in commentList"
+        :key="item.id">
+        <div class="item">
+          <div class="avatar">
+            <image
+              :style="{ width: '70rpx', height: '70rpx' }"
+              :src="item?.user?.avatar_path">
+            </image>
+          </div>
+          <div class="messages">
+            <div class="user">{{ item?.user?.nickname }}</div>
+            <div class="content">
+              <up-text
+                size="26"
+                lineHeight="30"
+                :text="item.content">
+              </up-text>
+            </div>
           </div>
         </div>
-      </div>
+      </template>
+    </div>
+    <div class="comment-input">
+      <u-textarea
+        v-model="commentValue"
+        autoHeight
+        count
+        cursorSpacing="20"
+        @confirm="confirm"
+        placeholder="请文明评论">
+      </u-textarea>
     </div>
   </div>
 </template>
@@ -154,7 +194,7 @@
           width: 70rpx;
           height: 70rpx;
           border-radius: 50%;
-          background-color: #7a57d1;
+          // background-color: #7a57d1;
           margin-right: 20rpx;
           box-sizing: border-box;
         }
@@ -165,9 +205,19 @@
           .user {
             color: $u-tips-color;
             margin-bottom: 10rpx;
+            font-size: 26rpx;
+            font-weight: 700;
           }
         }
       }
+    }
+    .comment-input {
+      position: fixed;
+      bottom: 0rpx;
+      width: 100%;
+      // height: 150rpx;
+      padding-bottom: 100rpx;
+      background-color: #fff;
     }
   }
 </style>

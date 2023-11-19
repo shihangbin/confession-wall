@@ -105,13 +105,11 @@
         <div
           class="item"
           @click="toDetails(item.id)">
-          <template v-if="item.image_urls[0] !== null">
-            <image
-              style="width: 100%"
-              :src="item.image_urls[0]"
-              mode="widthFix">
-            </image>
-          </template>
+          <image
+            style="width: 100%"
+            :src="item.image_urls[0]"
+            mode="widthFix">
+          </image>
           <div class="content">
             <up-text
               size="26"
