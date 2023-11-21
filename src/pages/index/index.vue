@@ -11,10 +11,11 @@
     onPageScroll,
     onPullDownRefresh,
     onReachBottom,
+    onShow,
   } from '@dcloudio/uni-app'
 
   const articleStore = useArticleStore()
-  const { articleList } = storeToRefs(articleStore)
+  const { articleList, commentNum } = storeToRefs(articleStore)
   const offset = ref(0)
   const scrollTop = ref(0)
   const groupBy = ref(0)
@@ -50,7 +51,19 @@
 
   onLoad(async () => {
     await articleGroupBy()
+    await comment_num()
   })
+
+  onShow(async () => {
+    await comment_num()
+  })
+
+  const comment_num = async () => {
+    commentNum.value = []
+    for (const item of articleList.value) {
+      await articleStore.getCommentListAction(item.id)
+    }
+  }
 
   onReachBottom(async () => {
     // 当页面滚动到底部时触发
@@ -73,6 +86,7 @@
   onPullDownRefresh(async () => {
     offset.value = 0
     const result = await articleGroupBy()
+
     if (result.length > 0) {
       uni.stopPullDownRefresh()
       return
@@ -104,9 +118,12 @@
   <div class="index">
     <search-tabs @tabs="articleASC"></search-tabs>
     <template
-      v-for="item in articleList"
+      v-for="(item, index) in articleList"
       :key="item.id">
-      <content-item :itemArticle="item"></content-item>
+      <content-item
+        :itemArticle="item"
+        :commentNum="commentNum[index]">
+      </content-item>
     </template>
     <div>
       <uni-load-more :status="uniLoad"></uni-load-more>

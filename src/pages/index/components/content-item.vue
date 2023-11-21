@@ -17,6 +17,10 @@
       type: Object,
       default: () => {},
     },
+    commentNum: {
+      type: Number,
+      default: 0,
+    },
   })
 
   const previewImage = (index: number, itemArr: any) => {
@@ -96,9 +100,9 @@
     <div class="content-top">
       <div class="top-avatar">
         <image
-          @click="toUserInfo(props.itemArticle?.user?.id)"
-          class="image"
-          :src="props.itemArticle?.user?.avatar_path">
+          :style="{ width: '100rpx', height: '100rpx' }"
+          :src="props.itemArticle?.user?.avatar_path"
+          @click="toUserInfo(props.itemArticle?.user?.id)">
         </image>
       </div>
       <div class="top-center">
@@ -134,18 +138,22 @@
         :text="props.itemArticle?.content">
       </up-text>
       <scroll-view
-        class="scroll-view"
+        enable-flex
+        class="scroll-view_H"
         scroll-x="true">
         <template
           v-for="(item, index) in props.itemArticle?.image_urls"
           :key="index">
-          <image
-            v-if="item"
+          <div
             class="scroll-view-item"
-            :src="item"
-            mode="aspectFill"
-            @click="previewImage(index, props.itemArticle?.image_urls)">
-          </image>
+            v-if="item">
+            <image
+              :src="item"
+              :style="{ width: '100%', height: '100%' }"
+              mode="aspectFill"
+              @click="previewImage(index, props.itemArticle?.image_urls)">
+            </image>
+          </div>
         </template>
       </scroll-view>
     </div>
@@ -157,10 +165,25 @@
           :threshold="[60000, 3600000]">
         </uni-dateformat>
       </div>
-      <div
-        class="bottom-like"
-        @click="likeBtn">
-        喜欢
+      <div class="bottom-view">
+        <div
+          class="comment"
+          @click="toArticle(props.itemArticle?.id)">
+          <u-icon
+            name="chat"
+            size="50">
+          </u-icon>
+          <span class="comment_num"> {{ props.commentNum }}</span>
+        </div>
+        <div
+          class="bottom-like"
+          @click="likeBtn">
+          <u-icon
+            name="thumb-up"
+            size="50">
+          </u-icon>
+          <span class="like_num">1</span>
+        </div>
       </div>
     </div>
   </div>
@@ -192,10 +215,6 @@
         border-radius: 8rpx;
         border: 5rpx solid #000;
         overflow: hidden;
-        .image {
-          width: 100%;
-          height: 100%;
-        }
       }
       .top-center {
         display: flex;
@@ -216,7 +235,7 @@
       text-align: justify;
       letter-spacing: 5rpx;
       // background-color: pink;
-      .scroll-view {
+      .scroll-view_H {
         white-space: nowrap;
         width: 100%;
         // height: 300rpx;
@@ -240,6 +259,28 @@
       .bottom-time {
         font-size: 26rpx;
         text-align: center;
+      }
+      .bottom-view {
+        display: flex;
+        font-size: 26rpx;
+        color: $u-content-color;
+        .comment {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-right: 30rpx;
+          .comment_num {
+            padding-left: 5rpx;
+          }
+        }
+        .bottom-like {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .like_num {
+            padding-left: 5rpx;
+          }
+        }
       }
     }
   }

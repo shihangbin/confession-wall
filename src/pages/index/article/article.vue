@@ -27,6 +27,10 @@
   const commentValue = ref('')
 
   const confirm = async (e: any) => {
+    if (commentValue.value.length < 1) {
+      showToastError('none', '评论字数小于2个字符')
+      return
+    }
     const result = await articleStore.postCommentPublish(
       commentValue.value,
       articleItem.value.id
@@ -36,6 +40,14 @@
       await articleStore.getCommentListAction(articleItem.value.id)
       showToastError('none', '评论成功')
     }
+  }
+
+  const toUserInfo = (id: string | number) => {
+    console.log(id)
+
+    uni.navigateTo({
+      url: `/pages/user/user/user?id=${id}`,
+    })
   }
 </script>
 
@@ -49,7 +61,8 @@
               width: '100rpx',
               height: '100rpx',
             }"
-            :src="articleItem?.user?.avatar_path">
+            :src="articleItem?.user?.avatar_path"
+            @click="toUserInfo(articleItem?.user?.id)">
           </image>
         </div>
         <div class="info">
@@ -70,7 +83,7 @@
           :text="articleItem?.content">
         </up-text>
       </div>
-      <template v-if="articleItem?.image_urls[0] !== null">
+      <template v-if="articleItem?.image_urls?.[0] !== null">
         <up-image
           v-if="articleItem?.image_urls?.length == 1"
           :show-loading="true"
@@ -119,9 +132,9 @@
         v-model="commentValue"
         autoHeight
         count
-        cursorSpacing="20"
+        :cursorSpacing="20"
         @confirm="confirm"
-        placeholder="请文明评论">
+        placeholder="请文明评论...">
       </u-textarea>
     </div>
   </div>
@@ -197,6 +210,7 @@
           // background-color: #7a57d1;
           margin-right: 20rpx;
           box-sizing: border-box;
+          overflow: hidden;
         }
         .messages {
           width: 600rpx;

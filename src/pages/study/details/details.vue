@@ -17,7 +17,10 @@
   onLoad(async (option: any) => {
     await userStore.getUserAction()
     await articleStore.getStudyItemAction(option.id)
-    if (studyItem?.value?.user.id === userInfo?.value.id) {
+    if (
+      studyItem?.value?.user.id === userInfo?.value.id ||
+      userInfo.value.role == 'admin'
+    ) {
       isPublish.value = !isPublish.value
     }
   })
@@ -46,7 +49,7 @@
 
 <template>
   <div class="details">
-    <template v-if="studyItem?.image_urls[0] !== null">
+    <template v-if="studyItem?.image_urls?.[0] !== null">
       <u-swiper
         :list="studyItem?.image_urls"
         height="800"

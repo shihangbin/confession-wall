@@ -14,6 +14,7 @@ export const useArticleStore = defineStore('article', {
     articleList: [],
     articleItem: {},
     commentList: {},
+    commentNum: [],
     studyList: [],
     studyItem: {},
   }),
@@ -28,11 +29,6 @@ export const useArticleStore = defineStore('article', {
       const articleList: any = await getArticleList(offset, size, assort, sort)
       this.articleList = [...this.articleList, ...articleList.data]
       return this.articleList
-    },
-    async getCommentListAction(articleId: number) {
-      const commentList: any = await getCommentList(articleId)
-      this.commentList = commentList.data
-      return this.commentList
     },
     async getStudyListAction(
       offset: number,
@@ -66,6 +62,12 @@ export const useArticleStore = defineStore('article', {
     async postStudyPublish(content: any, assort: number) {
       const publishArticle: any = await postArticle(content, assort)
       return publishArticle
+    },
+    async getCommentListAction(articleId: number) {
+      const commentList: any = await getCommentList(articleId)
+      this.commentList = commentList.data
+      this.commentNum.push(commentList.data.length)
+      return this.commentList
     },
     async postCommentPublish(content: any, articleId: number) {
       const publishComment: any = await postComment(content, articleId)
