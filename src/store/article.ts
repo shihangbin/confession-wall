@@ -84,23 +84,23 @@ export const useArticleStore = defineStore('article', {
     },
     async postLikeAction(articleId: number, userId: number) {
       const res: any = await getLikeArticle(articleId, userId)
+      // && typeof res.data == 'undefined') || res.data == null
 
-      if (typeof res.data == 'undefined' || res.data == null) {
+      if (!res.isLike) {
         await postLikeArticle(articleId)
-        console.log('点赞成功')
-        return true
+        return !res.isLike
       } else {
-        await delLikeArticle(res.data?.id)
-        console.log('取消点赞')
-        return false
+        await delLikeArticle(res.data?.[0]?.id)
+        return !res.isLike
       }
     },
-    async getLikeListAction(articleId: number) {
+    async getLikeListAction(articleId: number, userId: number) {
       const res: any = await getLikeListArticle(articleId)
+      const res2: any = await getLikeArticle(articleId, userId)
 
       this.likeNum.push({
         id: articleId,
-        is_like: false,
+        is_like: res2.isLike,
         like_num: res.data.length,
       })
 

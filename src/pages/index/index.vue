@@ -2,6 +2,7 @@
   import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useArticleStore } from '@/store/article'
+  import { useUserStore } from '@/store/user'
   import searchTabs from './components/search-tabs.vue'
   import contentItem from './components/content-item.vue'
   import comPublish from '@/components/publish.vue'
@@ -14,8 +15,11 @@
     onShow,
   } from '@dcloudio/uni-app'
 
+  const userStore = useUserStore()
   const articleStore = useArticleStore()
   const { articleList, commentNum, likeNum } = storeToRefs(articleStore)
+  const { userInfo } = storeToRefs(userStore)
+
   const offset = ref(0)
   const scrollTop = ref(0)
   const groupBy = ref(0)
@@ -53,12 +57,18 @@
     await articleGroupBy()
     await comment_num()
     await like_num()
+    await userStore.getUserAction()
   })
 
   onShow(async () => {
     await comment_num()
     await like_num()
+    await userStore.getUserAction()
   })
+
+  const isLike = async () => {
+    await like_num()
+  }
 
   const comment_num = async () => {
     commentNum.value = []
@@ -69,7 +79,7 @@
   const like_num = async () => {
     likeNum.value = []
     for (const item of articleList.value) {
-      await articleStore.getLikeListAction(item.id)
+      await articleStore.getLikeListAction(item.id, userInfo.value.id)
     }
   }
 
@@ -131,9 +141,9 @@
       <content-item
         :itemArticle="item"
         :commentNum="commentNum[index]"
-        :likeNum="likeNum[index]">
+        :likeNum="likeNum[index]"
+        @isLike="isLike">
       </content-item>
-      {{ likeNum[index] }}
     </template>
     <div>
       <uni-load-more :status="uniLoad"></uni-load-more>

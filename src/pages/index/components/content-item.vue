@@ -101,21 +101,24 @@
     await userStore.getUserAction()
   })
 
-  const emit = defineEmits(['likeBtn'])
+  const emit = defineEmits(['isLike'])
 
-  const likeBtn = async (id: number, is_like: boolean, like_num: number) => {
-    // showToastError('none', '开发中...')
+  const likeBtn = async (id: number) => {
     const res = await articleStore.postLikeAction(id, userInfo.value.id)
 
-    for (const item of likeNum.value) {
-      if (item.id == id && !is_like && res) {
-        item.is_like = true
-        item.like_num++
-      } else if (item.id == id && is_like && !res) {
-        item.is_like = false
-        item.like_num--
+    setTimeout(() => {
+      // showToastError('none', '开发中...')
+
+      for (const item of likeNum.value) {
+        if (item.id == id && res) {
+          item.like_num++
+          emit('isLike')
+        } else if (item.id == id && !res) {
+          item.like_num--
+          emit('isLike')
+        }
       }
-    }
+    }, 500)
   }
   const time = ref('')
   time.value = timeFormat(publication_date)
@@ -199,19 +202,13 @@
             name="chat"
             size="50">
           </u-icon>
-          <span class="comment_num"> {{ props.commentNum }}</span>
+          <span class="comment_num"> {{ props.commentNum || 0 }}</span>
         </div>
         <div
           class="bottom-like"
-          @click="
-            likeBtn(
-              props.likeNum?.id,
-              props.likeNum?.like_is,
-              props.likeNum?.like_num
-            )
-          ">
+          @click="likeBtn(props.likeNum?.id)">
           <u-icon
-            v-if="props.likeNum?.like_is"
+            v-if="props.likeNum?.is_like"
             name="thumb-up"
             color="pink"
             size="50">
@@ -222,7 +219,7 @@
             size="50">
           </u-icon>
           <span class="like_num">
-            {{ props.likeNum?.like_num }}
+            {{ props.likeNum?.like_num || 0 }}
           </span>
         </div>
       </div>
