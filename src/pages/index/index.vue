@@ -15,7 +15,7 @@
   } from '@dcloudio/uni-app'
 
   const articleStore = useArticleStore()
-  const { articleList, commentNum } = storeToRefs(articleStore)
+  const { articleList, commentNum, likeNum } = storeToRefs(articleStore)
   const offset = ref(0)
   const scrollTop = ref(0)
   const groupBy = ref(0)
@@ -52,16 +52,24 @@
   onLoad(async () => {
     await articleGroupBy()
     await comment_num()
+    await like_num()
   })
 
   onShow(async () => {
     await comment_num()
+    await like_num()
   })
 
   const comment_num = async () => {
     commentNum.value = []
     for (const item of articleList.value) {
       await articleStore.getCommentListAction(item.id)
+    }
+  }
+  const like_num = async () => {
+    likeNum.value = []
+    for (const item of articleList.value) {
+      await articleStore.getLikeListAction(item.id)
     }
   }
 
@@ -122,8 +130,10 @@
       :key="item.id">
       <content-item
         :itemArticle="item"
-        :commentNum="commentNum[index]">
+        :commentNum="commentNum[index]"
+        :likeNum="likeNum[index]">
       </content-item>
+      {{ likeNum[index] }}
     </template>
     <div>
       <uni-load-more :status="uniLoad"></uni-load-more>

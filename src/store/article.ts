@@ -7,6 +7,10 @@ import {
   delArticle,
   getCommentList,
   postComment,
+  postLikeArticle,
+  getLikeArticle,
+  delLikeArticle,
+  getLikeListArticle,
 } from '@/service/modules/home'
 
 export const useArticleStore = defineStore('article', {
@@ -17,6 +21,7 @@ export const useArticleStore = defineStore('article', {
     commentNum: [],
     studyList: [],
     studyItem: {},
+    likeNum: [],
   }),
 
   actions: {
@@ -76,6 +81,30 @@ export const useArticleStore = defineStore('article', {
     async delArticleAction(id: string | number) {
       const res: any = await delArticle(id)
       return res
+    },
+    async postLikeAction(articleId: number, userId: number) {
+      const res: any = await getLikeArticle(articleId, userId)
+
+      if (typeof res.data == 'undefined' || res.data == null) {
+        await postLikeArticle(articleId)
+        console.log('点赞成功')
+        return true
+      } else {
+        await delLikeArticle(res.data?.id)
+        console.log('取消点赞')
+        return false
+      }
+    },
+    async getLikeListAction(articleId: number) {
+      const res: any = await getLikeListArticle(articleId)
+
+      this.likeNum.push({
+        id: articleId,
+        is_like: false,
+        like_num: res.data.length,
+      })
+
+      return this.likeNum
     },
   },
 })

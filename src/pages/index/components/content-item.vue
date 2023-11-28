@@ -5,12 +5,13 @@
   import { useArticleStore } from '@/store/article'
   import { storeToRefs } from 'pinia'
   import { showToastError } from '@/utils/handle.error'
+  import { onLoad, onShow } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
   const articleStore = useArticleStore()
 
   const { userInfo } = storeToRefs(userStore)
-  const { articleList } = storeToRefs(articleStore)
+  const { articleList, likeNum } = storeToRefs(articleStore)
 
   const props = defineProps({
     itemArticle: {
@@ -21,7 +22,19 @@
       type: Number,
       default: 0,
     },
+    likeNum: {
+      type: Object,
+      default: () => {},
+    },
   })
+
+  let articleId = props.itemArticle?.id
+  let userId = props.itemArticle?.user?.id
+  let avatar = props.itemArticle?.user?.avatar_path
+  let nickname = props.itemArticle?.user?.nickname
+  let content = props.itemArticle?.content
+  let imageURL = props.itemArticle?.image_urls
+  let publication_date = props.itemArticle?.publication_date
 
   const previewImage = (index: number, itemArr: any) => {
     uni.previewImage({
@@ -58,13 +71,10 @@
     },
   ])
 
-  const articleId = async (id: string | number) => {
+  const editArticleId = async (id: string | number) => {
     await userStore.getUserAction()
     show.value = !show.value
-    if (
-      userInfo.value.id === props?.itemArticle?.user?.id ||
-      userInfo.value.role == 'admin'
-    ) {
+    if (userInfo.value.id === userId || userInfo.value.role == 'admin') {
       for (const item of list.value) {
         item.disabled = false
       }
@@ -78,8 +88,8 @@
       showToastError('none', '开发中...')
     }
     if (e.type == 'del') {
-      console.log('del', props.itemArticle?.id)
-      const res = await articleStore.delArticleAction(props.itemArticle?.id)
+      console.log('del', articleId)
+      const res = await articleStore.delArticleAction(articleId)
       if (res.code === 0) {
         showToastError('none', res.message)
         articleList.value = []
@@ -87,12 +97,28 @@
       }
     }
   }
+  onShow(async () => {
+    await userStore.getUserAction()
+  })
 
-  const likeBtn = () => {
-    showToastError('none', '开发中...')
+  const emit = defineEmits(['likeBtn'])
+
+  const likeBtn = async (id: number, is_like: boolean, like_num: number) => {
+    // showToastError('none', '开发中...')
+    const res = await articleStore.postLikeAction(id, userInfo.value.id)
+
+    for (const item of likeNum.value) {
+      if (item.id == id && !is_like && res) {
+        item.is_like = true
+        item.like_num++
+      } else if (item.id == id && is_like && !res) {
+        item.is_like = false
+        item.like_num--
+      }
+    }
   }
   const time = ref('')
-  time.value = timeFormat(props.itemArticle?.publication_date)
+  time.value = timeFormat(publication_date)
 </script>
 
 <template>
@@ -101,17 +127,17 @@
       <div class="top-avatar">
         <image
           :style="{ width: '100rpx', height: '100rpx' }"
-          :src="props.itemArticle?.user?.avatar_path"
-          @click="toUserInfo(props.itemArticle?.user?.id)">
+          :src="avatar"
+          @click="toUserInfo(userId)">
         </image>
       </div>
       <div class="top-center">
-        <div class="top-name">{{ props.itemArticle?.user?.nickname }}</div>
+        <div class="top-name">{{ nickname }}</div>
         <!-- <div class="top-city">位置</div> -->
       </div>
       <div class="top-btn">
         <u-icon
-          @click="articleId(props.itemArticle?.id)"
+          @click="editArticleId(articleId)"
           name="more-circle"
           color="#000"
           size="50">
@@ -131,18 +157,18 @@
 
     <div class="content-center">
       <up-text
-        @click="toArticle(props.itemArticle?.id)"
+        @click="toArticle(articleId)"
         :lines="2"
         size="32"
         lineHeight="50"
-        :text="props.itemArticle?.content">
+        :text="content">
       </up-text>
       <scroll-view
         enable-flex
         class="scroll-view_H"
         scroll-x="true">
         <template
-          v-for="(item, index) in props.itemArticle?.image_urls"
+          v-for="(item, index) in imageURL"
           :key="index">
           <div
             class="scroll-view-item"
@@ -151,7 +177,7 @@
               :src="item"
               :style="{ width: '100%', height: '100%' }"
               mode="aspectFill"
-              @click="previewImage(index, props.itemArticle?.image_urls)">
+              @click="previewImage(index, imageURL)">
             </image>
           </div>
         </template>
@@ -168,7 +194,7 @@
       <div class="bottom-view">
         <div
           class="comment"
-          @click="toArticle(props.itemArticle?.id)">
+          @click="toArticle(articleId)">
           <u-icon
             name="chat"
             size="50">
@@ -177,12 +203,27 @@
         </div>
         <div
           class="bottom-like"
-          @click="likeBtn">
+          @click="
+            likeBtn(
+              props.likeNum?.id,
+              props.likeNum?.like_is,
+              props.likeNum?.like_num
+            )
+          ">
           <u-icon
+            v-if="props.likeNum?.like_is"
+            name="thumb-up"
+            color="pink"
+            size="50">
+          </u-icon>
+          <u-icon
+            v-else
             name="thumb-up"
             size="50">
           </u-icon>
-          <span class="like_num">1</span>
+          <span class="like_num">
+            {{ props.likeNum?.like_num }}
+          </span>
         </div>
       </div>
     </div>

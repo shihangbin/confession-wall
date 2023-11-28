@@ -63,3 +63,43 @@ export const delArticle = (id: number | string) => {
     url: `/article/${id}`,
   })
 }
+
+export const postLikeArticle = (id: number | string) => {
+  return sjRequest.post({
+    url: `/like`,
+    data: {
+      articleId: id,
+    },
+  })
+}
+
+export const getLikeArticle = (articleId: number, userId: number) => {
+  return sjRequest.get({
+    url: `/like`,
+    data: {
+      articleId,
+      userId,
+    },
+  })
+}
+
+export const getLikeListArticle = (articleId: number) => {
+  return sjRequest.get({
+    url: `/like/list`,
+    data: {
+      articleId,
+    },
+  })
+}
+
+export const delLikeArticle = (id: number) => {
+  return sjRequest.delete({
+    url: `/like/${id}`,
+  })
+}
+
+export const getLikeUserArticle = (id: number) => {
+  return sjRequest.get({
+    url: `/like/user`,
+  })
+}
