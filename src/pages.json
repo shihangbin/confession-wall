@@ -28,7 +28,7 @@
     {
       "path": "pages/study/study",
       "style": {
-        "navigationBarTitleText": "匿名区",
+        "navigationBarTitleText": "校园分享",
         "navigationBarBackgroundColor": "#fff",
         "enablePullDownRefresh": true
       }
@@ -36,7 +36,7 @@
     {
       "path": "pages/study/details/details",
       "style": {
-        "navigationBarTitleText": "匿名区",
+        "navigationBarTitleText": "详情",
         "navigationBarBackgroundColor": "#fff",
         "enablePullDownRefresh": true
       }
@@ -100,7 +100,7 @@
           "path": "study/study",
           "style": {
             "enablePullDownRefresh": false,
-            "navigationBarTitleText": "匿名发布"
+            "navigationBarTitleText": "分享发布"
           }
         }
       ]
@@ -139,7 +139,7 @@
         "pagePath": "pages/study/study",
         "iconPath": "/static/tabBar/study.png",
         "selectedIconPath": "/static/tabBar/study-active.png",
-        "text": "匿名"
+        "text": "分享"
       },
       {
         "pagePath": "pages/user/user",
