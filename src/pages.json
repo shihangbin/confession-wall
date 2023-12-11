@@ -21,8 +21,7 @@
       "path": "pages/index/article/article",
       "style": {
         "navigationBarTitleText": "详情",
-        "navigationBarBackgroundColor": "#fff",
-        "enablePullDownRefresh": true
+        "navigationBarBackgroundColor": "#fff"
       }
     },
     {
@@ -37,8 +36,7 @@
       "path": "pages/study/details/details",
       "style": {
         "navigationBarTitleText": "详情",
-        "navigationBarBackgroundColor": "#fff",
-        "enablePullDownRefresh": true
+        "navigationBarBackgroundColor": "#fff"
       }
     },
     {

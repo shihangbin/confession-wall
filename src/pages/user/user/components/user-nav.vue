@@ -1,30 +1,16 @@
 <script lang="ts" setup>
   import { ref } from 'vue'
-  import { useUserStore } from '@/store/user'
-  import { storeToRefs } from 'pinia'
-  import { onLoad } from '@dcloudio/uni-app'
 
-  const userStore = useUserStore()
-  const { userInfo }: any = storeToRefs(userStore)
-  let messages = ref<string>('')
-
-  const isLoginUser = ref(false)
-  onLoad(async (params: any) => {
-    if (params.id === undefined) {
-      await userStore.getUserAction()
-      isLoginUser.value = true
-    } else {
-      await userStore.getUserInfoAction(params.id)
-      isLoginUser.value = false
-    }
+  const props = defineProps({
+    info: {
+      type: Object,
+      default: () => {},
+    },
+    isLoginUser: {
+      type: Boolean,
+      default: false,
+    },
   })
-
-  const keyArray = ['age', 'gender', 'major', 'school_class']
-  for (const key in userInfo.value) {
-    if (keyArray.includes(key)) {
-      messages.value += userInfo.value[key] + '/'
-    }
-  }
 
   const menu: any = uni.getSystemInfoSync().statusBarHeight
 
@@ -34,9 +20,7 @@
 
   const editBtn = () => {
     //在起始页面跳转到test.vue页面并传递参数
-    console.log(isLoginUser.value)
-
-    if (isLoginUser.value) {
+    if (props.isLoginUser) {
       uni.navigateTo({
         url: '/pages/user/update/update',
       })
@@ -45,10 +29,10 @@
 
   const copy = () => {
     uni.setClipboardData({
-      data: userInfo.value.wechat_or_qq,
+      data: props.info.wechat_or_qq,
       success: function (res) {
         uni.showToast({
-          title: '复制成功',
+          title: 'QQ/微信复制成功',
         })
       },
     })
@@ -70,7 +54,7 @@
       <div class="nav-info">
         <div class="nav-avatar">
           <up-avatar
-            :src="userInfo?.avatar_path"
+            :src="props.info?.avatar_path"
             size="166rpx"
             shape="square"
             mode="widthFix"
@@ -81,46 +65,56 @@
           <up-text
             :lines="1"
             bold
-            :text="userInfo?.nickname"
-            size="33rpx"
+            :text="props.info?.nickname"
+            size="36rpx"
             color="#7a57d1">
           </up-text>
         </div>
-        <div class="nav-message">
-          <up-text
-            :lines="1"
-            :text="messages"
-            size="30rpx">
-          </up-text>
+        <div
+          v-if="props.isLoginUser"
+          class="nav-btn"
+          @click="editBtn">
+          编辑
         </div>
       </div>
-      <div class="nav-position">
-        <div class="nav-wx">
-          <div>微信/QQ：</div>
-          <up-text
-            :lines="1"
-            size="30rpx"
-            color="$u-content-color"
-            :text="userInfo?.wechat_or_qq"
-            @click="copy">
-          </up-text>
-        </div>
-        <div class="nav-sign">
-          <div>个性签名：</div>
-          <up-text
-            :lines="1"
-            size="30rpx"
-            color="$u-content-color"
-            :text="userInfo?.say">
-          </up-text>
-        </div>
-        <div class="nav-like">
-          <div class="like-left">
-            <div class="like-item">粉丝：2</div>
-            <div class="like-item">关注：3</div>
-          </div>
-          <div class="like-right">编辑/关注</div>
-        </div>
+    </div>
+    <div class="nav-message">
+      <h2 class="title">基本信息</h2>
+      <div class="info">
+        <div class="left">昵称</div>
+        <div class="right">{{ props.info.nickname }}</div>
+      </div>
+      <div class="info">
+        <div class="left">年龄</div>
+        <div class="right">{{ props.info.age }}</div>
+      </div>
+      <div class="info">
+        <div class="left">性别</div>
+        <div class="right">{{ props.info.gender }}</div>
+      </div>
+      <div
+        class="info"
+        @click="copy">
+        <div class="left">QQ/微信</div>
+        <div class="right">{{ props.info.wechat_or_qq }}</div>
+      </div>
+    </div>
+    <div class="nav-message">
+      <h2 class="title">学校</h2>
+      <div class="info">
+        <div class="left">专业</div>
+        <div class="right">{{ props.info.major }}</div>
+      </div>
+      <div class="info">
+        <div class="left">班级</div>
+        <div class="right">{{ props.info.school_class }}</div>
+      </div>
+    </div>
+    <div class="nav-message">
+      <h2 class="title">签名</h2>
+      <div class="info">
+        <div class="left">个性签名</div>
+        <div class="right">{{ props.info.say }}</div>
       </div>
     </div>
   </div>
@@ -129,15 +123,16 @@
 <style lang="scss" scoped>
   .nav {
     width: 100%;
-    border-bottom: 6rpx solid #eee;
+    height: 100vh;
     box-sizing: border-box;
-    // height: 350px;
+    background-color: #f3f4f6;
 
     .nav-left-btn {
       position: relative;
       padding: 15rpx 20rpx 0 20rpx;
       width: 100%;
-      height: 800rpx;
+      // height: 800rpx;
+      height: 600rpx;
       // background-image: linear-gradient(to top, #5f72bd 0%, #9b23ea 100%);
       background-image: url('https://img.xbin.cn/images/2023/10/08-00-33-fe4e96.png');
       // background-image: url('/static/tabBar/nav.png');
@@ -149,10 +144,11 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 380rpx;
+      // height: 380rpx;
+      height: 150rpx;
       border-radius: 30rpx 30rpx 0 0;
       background-color: #fff;
-      // background-color: skyblue;
+      // background-color: #f3f4f6;
       box-sizing: border-box;
 
       .nav-avatar {
@@ -173,6 +169,7 @@
         // border: 2rpx solid #000;
       }
       .nav-name {
+        flex: 1;
         position: absolute;
         top: 10rpx;
         left: 245rpx;
@@ -180,44 +177,45 @@
         font-size: 35rpx;
         box-sizing: border-box;
       }
-      .nav-message {
+      .nav-btn {
         position: absolute;
-        top: 60rpx;
-        left: 235rpx;
+        top: 75rpx;
+        right: 20rpx;
+        width: 160rpx;
+        height: 60rpx;
+        text-align: center;
+        line-height: 60rpx;
+        border-radius: 30rpx;
+        background-color: #eee;
+        // font-weight: 700;
       }
     }
-
-    .nav-position {
-      display: block;
-      width: 93%;
-      position: absolute;
-      left: 30rpx;
-      bottom: 16rpx;
-      color: $u-content-color;
-      font-size: 30rpx;
+    .nav-message {
+      // margin: 20rpx;
+      margin: 10rpx 0;
+      padding: 30rpx;
+      background-color: #fff;
+      border-radius: 15rpx;
       box-sizing: border-box;
-      // font-weight: 700;
-      .nav-wx,
-      .nav-sign {
-        display: flex;
+
+      .title {
+        font-weight: 700;
+        font-size: 33rpx;
+        color: #303133;
+        margin-bottom: 10rpx;
       }
-      .nav-like {
-        margin-top: 88rpx;
+      .info {
+        padding: 10rpx 0;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .like-left {
-          flex: 1;
-          display: flex;
-          .like-item {
-            margin: 0 10rpx;
-          }
+        font-size: 30rpx;
+        .left {
+          width: 160rpx;
+          color: #909399;
         }
-      }
-      .like-right {
-        padding: 8rpx 17rpx;
-        background-color: #ccc;
-        border-radius: 30rpx;
+        .right {
+          flex: 1;
+          color: #303133;
+        }
       }
     }
   }
