@@ -10,7 +10,7 @@
   const userStore = useUserStore()
   const articleStore = useArticleStore()
 
-  const { userInfo } = storeToRefs(userStore)
+  const { userInfo }: any = storeToRefs(userStore)
   const { articleList, likeNum } = storeToRefs(articleStore)
 
   const props = defineProps({
@@ -84,16 +84,18 @@
     show.value = !show.value
   }
   const sheetSelect = async (e: any) => {
-    if (e.type == 'edit') {
+    if (e.type === 'edit') {
       showToastError('none', '开发中...')
     }
+
     if (e.type == 'del') {
-      console.log('del', articleId)
       const res = await articleStore.delArticleAction(articleId)
       if (res.code === 0) {
         showToastError('none', res.message)
         articleList.value = []
         await articleStore.getArticleListAction()
+      } else {
+        showToastError('none', '删除文章失败：' + res.message)
       }
     }
   }
@@ -106,19 +108,18 @@
   const likeBtn = async (id: number) => {
     const res = await articleStore.postLikeAction(id, userInfo.value.id)
 
-    setTimeout(() => {
-      // showToastError('none', '开发中...')
+    // showToastError('none', '开发中...')
 
-      for (const item of likeNum.value) {
-        if (item.id == id && res) {
-          item.like_num++
-          emit('isLike')
-        } else if (item.id == id && !res) {
-          item.like_num--
-          emit('isLike')
-        }
+    for (const item of likeNum.value) {
+      if (item.id == id && res) {
+        item.like_num++
+        emit('isLike')
+      } else if (item.id == id && !res) {
+        item.like_num--
+        emit('isLike')
       }
-    }, 500)
+    }
+    // setTimeout(() => {}, 500)
   }
   const time = ref('')
   time.value = timeFormat(publication_date)
@@ -172,7 +173,7 @@
         scroll-x="true">
         <template
           v-for="(item, index) in imageURL"
-          :key="index">
+          :key="item">
           <div
             class="scroll-view-item"
             v-if="item">

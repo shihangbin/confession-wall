@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { onLoad } from '@dcloudio/uni-app'
   import { useArticleStore } from '../../../store/article'
@@ -21,22 +20,23 @@
     })
   }
 
-  const time = ref('')
-  time.value = timeFormat(articleItem?.value.publication_date)
+  // 无需使用 ref，直接声明常量
+  const time = timeFormat(articleItem?.value.publication_date)
 
-  const commentValue = ref('')
+  // 无需使用 ref，直接声明常量
+  let commentValue = ''
 
   const confirm = async (e: any) => {
-    if (commentValue.value.length < 1) {
+    if (commentValue.length < 1) {
       showToastError('none', '评论字数小于2个字符')
       return
     }
     const result = await articleStore.postCommentPublish(
-      commentValue.value,
+      commentValue,
       articleItem.value.id
     )
     if (result.code === 0) {
-      commentValue.value = ''
+      commentValue = ''
       await articleStore.getCommentListAction(articleItem.value.id)
       showToastError('none', '评论成功')
     }

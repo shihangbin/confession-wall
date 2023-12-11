@@ -18,7 +18,7 @@
   const userStore = useUserStore()
   const articleStore = useArticleStore()
   const { articleList, commentNum, likeNum } = storeToRefs(articleStore)
-  const { userInfo } = storeToRefs(userStore)
+  const { userInfo }: any = storeToRefs(userStore)
 
   const offset = ref(0)
   const scrollTop = ref(0)
@@ -44,27 +44,28 @@
   }
 
   const articleGroupBy = async () => {
-    if (groupBy.value == 0) {
-      articleList.value = []
-      return await getArticle(0, 5, 1, 'DESC')
-    } else if (groupBy.value == 1) {
-      articleList.value = []
-      return await getArticle(0, 5, 1, 'ASC')
+    articleList.value = []
+    if (groupBy.value === 0) {
+      await getArticle(0, 5, 1, 'DESC')
+    } else if (groupBy.value === 1) {
+      await getArticle(0, 5, 1, 'ASC')
     }
   }
 
   onLoad(async () => {
+    await fetchData()
+  })
+
+  // onShow(async () => {
+  //   await fetchData()
+  // })
+
+  const fetchData = async () => {
     await articleGroupBy()
     await comment_num()
     await like_num()
     await userStore.getUserAction()
-  })
-
-  onShow(async () => {
-    await comment_num()
-    await like_num()
-    await userStore.getUserAction()
-  })
+  }
 
   const isLike = async () => {
     await like_num()
@@ -76,6 +77,7 @@
       await articleStore.getCommentListAction(item.id)
     }
   }
+
   const like_num = async () => {
     likeNum.value = []
     for (const item of articleList.value) {
@@ -84,42 +86,38 @@
   }
 
   onReachBottom(async () => {
-    // 当页面滚动到底部时触发
     uniLoad.value = 'loading'
     offset.value += 5
-    if (groupBy.value == 0) {
-      await getArticle(offset.value, 5, 1, 'DESC')
-    } else if (groupBy.value == 1) {
-      await getArticle(offset.value, 5, 1, 'ASC')
-    }
-    if (articleList.value.length == articleList.value.length) {
-      setTimeout(() => {
-        uniLoad.value = 'noMore'
-        uni.stopPullDownRefresh()
-      }, 2000)
-      return
-    }
+    await getMoreArticles()
   })
 
   onPullDownRefresh(async () => {
     offset.value = 0
-    const result = await articleGroupBy()
+    await fetchData()
+    uni.stopPullDownRefresh()
+  })
 
-    if (result.length > 0) {
-      uni.stopPullDownRefresh()
+  const getMoreArticles = async () => {
+    if (groupBy.value === 0) {
+      await getArticle(offset.value, 5, 1, 'DESC')
+      return
+    } else if (groupBy.value === 1) {
+      await getArticle(offset.value, 5, 1, 'ASC')
       return
     }
-    setTimeout(function () {
+
+    setTimeout(() => {
       showToastError('none', '网络错误')
       uni.stopPullDownRefresh()
       return
     }, 10000)
-  })
+  }
 
   const customStyle = {
     width: '100rpx',
     height: '100rpx',
   }
+
   const iconStyle = {
     width: '100rpx',
     height: '100rpx',
@@ -130,8 +128,10 @@
     borderRadius: '50%',
     color: '#fff',
   }
+
   const url = '/pages-publish/article/article'
 </script>
+
 <template>
   <div class="index">
     <search-tabs @tabs="articleASC"></search-tabs>
@@ -168,7 +168,6 @@
   .index {
     min-height: calc(100vh - var(--window-top));
     background-color: $u-bg-color;
-    // margin-bottom: 50rpx;
     padding-bottom: 200rpx;
     box-sizing: border-box;
   }

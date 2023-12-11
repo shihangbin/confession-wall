@@ -4,7 +4,7 @@
   import { showToastError } from '@/utils/handle.error'
 
   const userStore = useUserStore()
-  const { userInfo } = storeToRefs(userStore)
+  const { userInfo }: any = storeToRefs(userStore)
 
   const props = defineProps({
     toUrl: {

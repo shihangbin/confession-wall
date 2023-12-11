@@ -1,17 +1,18 @@
 <script lang="ts" setup>
   import { storeToRefs } from 'pinia'
   import { useUserStore } from '@/store/user'
-  import { onPullDownRefresh, onShow } from '@dcloudio/uni-app'
+  import { onLoad, onPullDownRefresh, onShow } from '@dcloudio/uni-app'
   import { showToastError } from '@/utils/handle.error'
 
   const userStore = useUserStore()
-  const { userInfo, isLogin, showLogin, helloLogin } = storeToRefs(userStore)
+  const { userInfo, isLogin, showLogin, helloLogin }: any =
+    storeToRefs(userStore)
 
   const getUserInfo = async () => {
     return await userStore.getUserAction()
   }
 
-  onShow(async () => {
+  onLoad(async () => {
     await getUserInfo()
   })
 

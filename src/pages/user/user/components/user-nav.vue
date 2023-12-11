@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-  import { ref } from 'vue'
-
   const props = defineProps({
     info: {
       type: Object,
@@ -115,6 +113,22 @@
       <div class="info">
         <div class="left">个性签名</div>
         <div class="right">{{ props.info.say }}</div>
+      </div>
+    </div>
+    <div class="nav-message">
+      <h2 class="title">账号</h2>
+      <div class="info">
+        <div class="left">ID</div>
+        <div class="right">{{ props.info.id }}</div>
+      </div>
+      <div class="info">
+        <div class="left">创建时间</div>
+        <div class="right">
+          <uni-dateformat
+            :date="props.info.createAt"
+            format="yyyy-MM-dd hh:mm">
+          </uni-dateformat>
+        </div>
       </div>
     </div>
   </div>
