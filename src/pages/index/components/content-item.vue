@@ -1,11 +1,10 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onUnmounted } from 'vue'
   import { timeFormat } from '@/utils/dayjs'
   import { useUserStore } from '@/store/user'
   import { useArticleStore } from '@/store/article'
   import { storeToRefs } from 'pinia'
   import { showToastError } from '@/utils/handle.error'
-  import { onLoad, onShow } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
   const articleStore = useArticleStore()
@@ -99,28 +98,50 @@
       }
     }
   }
-  onShow(async () => {
-    await userStore.getUserAction()
-  })
+  // onShow(async () => {
+  //   await userStore.getUserAction()
+  // })
 
   const emit = defineEmits(['isLike'])
 
+  let timer: any = null
+  let result: any = null
+
   const likeBtn = async (id: number) => {
-    const res = await articleStore.postLikeAction(id, userInfo.value.id)
-
-    // showToastError('none', '开发中...')
-
-    for (const item of likeNum.value) {
-      if (item.id == id && res) {
-        item.like_num++
-        emit('isLike')
-      } else if (item.id == id && !res) {
-        item.like_num--
-        emit('isLike')
-      }
+    showToastError('none', '有点问题暂时不用')
+    return
+    if (timer !== null) {
+      // 如果定时器还在运行，取消上一次的调用
+      clearTimeout(timer)
     }
-    // setTimeout(() => {}, 500)
+
+    timer = setTimeout(async () => {
+      try {
+        result = await articleStore.postLikeAction(id, userInfo.value.id)
+
+        for (const item of likeNum.value) {
+          if (item.id == id && result) {
+            item.like_num++
+            emit('isLike')
+          } else if (item.id == id && !result) {
+            item.like_num--
+            emit('isLike')
+          }
+        }
+      } catch (error) {
+        // 处理错误，例如显示提示或记录日志
+        console.error('Error in likeBtn:', error)
+      } finally {
+        timer = null
+      }
+    }, 300)
   }
+
+  // 确保在组件被卸载时清除定时器
+  onUnmounted(() => {
+    clearTimeout(timer)
+  })
+
   const time = ref('')
   time.value = timeFormat(publication_date)
 </script>

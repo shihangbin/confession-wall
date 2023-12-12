@@ -62,6 +62,22 @@
         "navigationBarTextStyle": "black",
         "enablePullDownRefresh": true
       }
+    },
+    {
+      "path": "pages/user/release/like",
+      "style": {
+        "navigationBarTitleText": "我的喜欢",
+        "navigationBarBackgroundColor": "#fff",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/user/release/article",
+      "style": {
+        "navigationBarTitleText": "我的文章",
+        "navigationBarBackgroundColor": "#fff",
+        "enablePullDownRefresh": true
+      }
     }
   ],
   "subPackages": [

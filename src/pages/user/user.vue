@@ -1,20 +1,31 @@
 <script setup lang="ts">
-  import userInfo from './components/user-info.vue'
+  import comUserInfo from './components/user-info.vue'
   import userAssist from './components/user-assist.vue'
   import userItem from './components/user-item.vue'
   import { showToastError } from '@/utils/handle.error'
+  import { useUserStore } from '@/store/user'
+  import { storeToRefs } from 'pinia'
+
+  const userStore = useUserStore()
+  const { userInfo }: any = storeToRefs(userStore)
 
   const articleBtn = () => {
-    showToastError('none', '开发中...')
+    // showToastError('none', '开发中...')
+    uni.navigateTo({
+      url: `/pages/user/release/article?id=${userInfo.value.id}`,
+    })
   }
   const likeBtn = () => {
-    showToastError('none', '开发中...')
+    // showToastError('none', '开发中...')
+    uni.navigateTo({
+      url: `/pages/user/release/like?id=${userInfo.value.id}`,
+    })
   }
 </script>
 
 <template>
   <div class="user">
-    <user-info></user-info>
+    <com-user-info></com-user-info>
     <user-assist></user-assist>
     <user-item
       leftIcon="file-text"

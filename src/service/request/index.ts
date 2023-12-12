@@ -4,28 +4,27 @@ import { WHITE_API } from '@/service/config/index'
 class SJRequest {
   baseURL: string
   timeout: number
-  // 创建实例
+
   constructor(config: any) {
     this.baseURL = config.baseURL
     this.timeout = config.timeout
   }
 
-  // 封装网络请求
   request(config: any) {
     return new Promise((resolve, reject) => {
       const url = config.url
       const method = config.method || 'GET'
-      const params = config.params || {}
       const data = config.data || {}
-      const headers = config.headers || {}
+      const headers: any = config.headers || {}
 
-      // 判断是否需要带上 token
+      // 检查 URL 是否不在 WHITE_API 中并且存在令牌
       const token = uni.getStorageSync('token')
       if (WHITE_API.indexOf(url) === -1 && token) {
         headers.Authorization = `Bearer ${token}`
       }
 
-      if (method == 'POST' || method == 'DELETE') {
+      // 为 POST 和 DELETE 方法设置 Authorization 头部
+      if (method === 'POST' || method === 'DELETE') {
         headers.Authorization = `Bearer ${token}`
       }
 
@@ -35,17 +34,9 @@ class SJRequest {
         method: method,
         data: data,
         header: headers,
-        params: params,
         timeout: this.timeout,
         success: (res: any) => {
           if (res.statusCode === 200) {
-            const response = {
-              data: res.data,
-              status: res.statusCode,
-              statusText: 'OK',
-              headers: res.header,
-            }
-
             const code = res.data.code
             const msg = res.data.message
 
@@ -56,14 +47,12 @@ class SJRequest {
                   url: '/pages-login/login/login',
                 })
               }, 1000)
+              reject(new Error(`请求失败，错误代码：${code}，错误信息：${msg}`))
+            } else {
+              resolve(res.data)
             }
-
-            // 这里你可以添加更多的响应处理逻辑
-            resolve(response.data)
           } else {
-            reject(
-              new Error(`Request failed with status code ${res.statusCode}`)
-            )
+            reject(new Error(`请求失败，状态码：${res.statusCode}`))
           }
         },
         fail: (error) => {

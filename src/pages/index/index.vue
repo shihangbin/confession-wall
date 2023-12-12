@@ -12,13 +12,12 @@
     onPageScroll,
     onPullDownRefresh,
     onReachBottom,
-    onShow,
   } from '@dcloudio/uni-app'
 
   const userStore = useUserStore()
   const articleStore = useArticleStore()
   const { articleList, commentNum, likeNum } = storeToRefs(articleStore)
-  const { userInfo }: any = storeToRefs(userStore)
+  const { userInfo } = storeToRefs(userStore)
 
   const offset = ref(0)
   const scrollTop = ref(0)
@@ -56,10 +55,6 @@
     await fetchData()
   })
 
-  // onShow(async () => {
-  //   await fetchData()
-  // })
-
   const fetchData = async () => {
     await articleGroupBy()
     await comment_num()
@@ -84,11 +79,11 @@
       await articleStore.getLikeListAction(item.id, userInfo.value.id)
     }
   }
-
+  // 在你的代码中的使用示例
   onReachBottom(async () => {
     uniLoad.value = 'loading'
     offset.value += 5
-    await getMoreArticles()
+    await debouncedGetMoreArticles()
   })
 
   onPullDownRefresh(async () => {
@@ -97,20 +92,29 @@
     uni.stopPullDownRefresh()
   })
 
-  const getMoreArticles = async () => {
-    if (groupBy.value === 0) {
-      await getArticle(offset.value, 5, 1, 'DESC')
-      return
-    } else if (groupBy.value === 1) {
-      await getArticle(offset.value, 5, 1, 'ASC')
-      return
-    }
-
-    setTimeout(() => {
+  const fetchArticles = async () => {
+    try {
+      if (groupBy.value === 0) {
+        await getArticle(offset.value, 5, 1, 'DESC')
+      } else if (groupBy.value === 1) {
+        await getArticle(offset.value, 5, 1, 'ASC')
+      }
+    } catch (error) {
       showToastError('none', '网络错误')
-      uni.stopPullDownRefresh()
-      return
-    }, 10000)
+      console.error('获取文章时出错:', error)
+    }
+  }
+
+  let timeoutId: any = null
+  const debouncedGetMoreArticles = async () => {
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(async () => {
+      await fetchArticles()
+      setTimeout(() => {
+        uni.stopPullDownRefresh()
+        uniLoad.value = 'no-more'
+      }, 5000)
+    }, 300)
   }
 
   const customStyle = {

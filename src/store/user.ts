@@ -4,22 +4,6 @@ import { getLikeArticle, getArticle } from '@/service/modules/user'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    // userInfo: {
-    //   id: 0,
-    //   username: '用户名',
-    //   password: '密码',
-    //   avatar_path: '头像',
-    //   nickname: '开朗的网友',
-    //   age: 99,
-    //   role: 'user',
-    //   is_muted: 0,
-    //   wechat_or_qq: '18213331550',
-    //   gender: '男',
-    //   major: '计算机应用专业',
-    //   school_class: '计应20002班',
-    //   say: '请输入你的个性签名...',
-    //   createAt: '2023-11-02T06:02:36.000Z',
-    // },
     userInfo: {},
     isLogin: true,
     showLogin: '编辑资料',

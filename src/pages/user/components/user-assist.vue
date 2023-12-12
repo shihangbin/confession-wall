@@ -60,7 +60,7 @@
     <image
       style="width: 600rpx; height: 800rpx"
       mode="aspectFill"
-      src="https://img.xbin.cn/images/2023/11/16-20-26-43e488.jpg">
+      src="https://img.xbin.cn/images/2023/12/12-16-42-3eeebd.jpg">
     </image>
   </u-popup>
 </template>
