@@ -2,9 +2,13 @@
   import { ref } from 'vue'
   import { storeToRefs } from 'pinia'
   import { useLoginStore } from '@/store/login'
+  import { useUserStore } from '@/store/user'
   import { showToastError } from '@/utils/handle.error'
+  import privacy from '@/components/privacy.vue'
 
+  const userStore = useUserStore()
   const loginStore = useLoginStore()
+  const { isPrivacy } = storeToRefs(userStore)
   const { token, code, msg } = storeToRefs(loginStore)
 
   const username = ref<string>('')
@@ -17,37 +21,41 @@
   }
 
   const loginBtn = async () => {
-    uni.showLoading({
-      title: '加载中',
-    })
-    setTimeout(() => {
-      uni.hideLoading()
-      showToastError('error', '网络错误')
-    }, 10000)
-
-    if (!username.value) {
-      showToastError('error', '请输入用户名!')
-      return
-    }
-    if (!password.value) {
-      showToastError('error', '请输入密码!')
-      return
-    }
-
-    await loginStore.loginAction(username.value, password.value)
-
-    if (token.value && code.value === 0) {
-      // 存储数据到本地存储
-      uni.setStorageSync('token', token.value)
-
+    if (isPrivacy.value) {
+      uni.showLoading({
+        title: '加载中',
+      })
       setTimeout(() => {
         uni.hideLoading()
-        uni.switchTab({
-          url: '/pages/index/index',
-        })
-      }, 1000)
+        showToastError('error', '网络错误')
+      }, 10000)
+
+      if (!username.value) {
+        showToastError('error', '请输入用户名!')
+        return
+      }
+      if (!password.value) {
+        showToastError('error', '请输入密码!')
+        return
+      }
+
+      await loginStore.loginAction(username.value, password.value)
+
+      if (token.value && code.value === 0) {
+        // 存储数据到本地存储
+        uni.setStorageSync('token', token.value)
+
+        setTimeout(() => {
+          uni.hideLoading()
+          uni.switchTab({
+            url: '/pages/index/index',
+          })
+        }, 1000)
+      } else {
+        showToastError('error', msg.value)
+      }
     } else {
-      showToastError('error', msg.value)
+      showToastError('none', '请同意隐私政策')
     }
   }
 
@@ -57,35 +65,39 @@
     show.value = false
   }
   const wxLoginBtn = () => {
-    uni.login({
-      provider: 'weixin', //使用微信登录
-      success: function (loginRes) {
-        uni
-          .request({
-            url: 'https://api.xbin.cn/login/wx',
-            method: 'POST',
-            data: {
-              code: loginRes.code,
-            },
-          })
-          .then((res: any) => {
-            res = res.data
-            const { openid } = res.data
+    if (isPrivacy.value) {
+      uni.login({
+        provider: 'weixin', //使用微信登录
+        success: function (loginRes) {
+          uni
+            .request({
+              url: 'https://api.xbin.cn/login/wx',
+              method: 'POST',
+              data: {
+                code: loginRes.code,
+              },
+            })
+            .then((res: any) => {
+              res = res.data
+              const { openid } = res.data
 
-            uni.setStorageSync('openid', openid)
-            uni.setStorageSync('token', res.token)
+              uni.setStorageSync('openid', openid)
+              uni.setStorageSync('token', res.token)
 
-            if (res.code === 0) {
-              setTimeout(() => {
-                uni.switchTab({
-                  url: '/pages/index/index',
-                })
-              }, 1000)
-            }
-            // const token = uni.getStorageSync('token')
-          })
-      },
-    })
+              if (res.code === 0) {
+                setTimeout(() => {
+                  uni.switchTab({
+                    url: '/pages/index/index',
+                  })
+                }, 1000)
+              }
+              // const token = uni.getStorageSync('token')
+            })
+        },
+      })
+    } else {
+      showToastError('none', '请同意隐私政策')
+    }
   }
 </script>
 
@@ -99,6 +111,7 @@
         mode="widthFix">
       </up-image>
     </div>
+
     <div class="user-info">
       <div class="username">
         <up-input
@@ -124,6 +137,9 @@
           prefixIconStyle="font-size: 22px;color: #909399"
           password>
         </up-input>
+
+        <privacy></privacy>
+
         <div class="btn">
           <div class="forget">
             <u-button
@@ -154,6 +170,7 @@
         </div>
       </div>
     </div>
+
     <div class="wx-login">
       <u-button
         text="微信一键登录"
@@ -195,7 +212,7 @@
         margin: 30rpx 0;
       }
       .btn {
-        margin-top: 66rpx;
+        margin-top: 30rpx;
         display: flex;
         justify-content: space-between;
         .login-btn {

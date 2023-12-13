@@ -9,6 +9,7 @@ export const useUserStore = defineStore('user', {
     showLogin: '编辑资料',
     helloLogin: '欢迎来到云南能源表白墙！',
     personage: [],
+    isPrivacy: false,
   }),
   actions: {
     async getUserAction() {

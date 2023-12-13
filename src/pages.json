@@ -97,6 +97,13 @@
             "enablePullDownRefresh": false,
             "navigationBarTitleText": "注册"
           }
+        },
+        {
+          "path": "privacy/web-view",
+          "style": {
+            "enablePullDownRefresh": false,
+            "navigationBarTitleText": "登录"
+          }
         }
       ]
     },
@@ -126,6 +133,10 @@
       "packages": ["pages-login"]
     },
     "pages-login/sign-up/sign-up": {
+      "network": "all",
+      "packages": ["pages-login"]
+    },
+    "pages-login/privacy/web-view": {
       "network": "all",
       "packages": ["pages-login"]
     },

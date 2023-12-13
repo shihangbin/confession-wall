@@ -2,9 +2,13 @@
   import { ref } from 'vue'
   import { showToastError } from '@/utils/handle.error'
   import { useSignUpStore } from '@/store/sign-up'
+  import { useUserStore } from '@/store/user'
   import { storeToRefs } from 'pinia'
+  import privacy from '@/components/privacy.vue'
 
   const signUpStore = useSignUpStore()
+  const userStore = useUserStore()
+  const { isPrivacy } = storeToRefs(userStore)
   const { code } = storeToRefs(signUpStore)
 
   const username = ref('')
@@ -12,30 +16,34 @@
   const password2 = ref('')
 
   const signUp = async () => {
-    if (!password1.value || !password2.value) {
-      showToastError('none', '用户名或密码不能为空!')
-      return
-    }
-    if (
-      username.value.length < 6 ||
-      password1.value.length < 6 ||
-      password2.value.length < 6
-    ) {
-      showToastError('none', '用户名或者密码不能小于六位!')
-      return
-    }
-    if (password1.value !== password2.value) {
-      showToastError('none', '密码不一致!')
-      return
-    }
-    await signUpStore.signUpAction(username.value, password2.value)
-    if (code.value === 0) {
-      uni.navigateTo({
-        url: '/pages-login/login/login',
-      })
-    }
-    if (code.value === -1002) {
-      showToastError('none', '用户存在请换一个用户名!')
+    if (isPrivacy.value) {
+      if (!password1.value || !password2.value) {
+        showToastError('none', '用户名或密码不能为空!')
+        return
+      }
+      if (
+        username.value.length < 6 ||
+        password1.value.length < 6 ||
+        password2.value.length < 6
+      ) {
+        showToastError('none', '用户名或者密码不能小于六位!')
+        return
+      }
+      if (password1.value !== password2.value) {
+        showToastError('none', '密码不一致!')
+        return
+      }
+      await signUpStore.signUpAction(username.value, password2.value)
+      if (code.value === 0) {
+        uni.navigateTo({
+          url: '/pages-login/login/login',
+        })
+      }
+      if (code.value === -1002) {
+        showToastError('none', '用户存在请换一个用户名!')
+      }
+    } else {
+      showToastError('none', '请同意隐私政策')
     }
   }
 </script>
@@ -91,6 +99,9 @@
           </up-input>
         </div>
       </div>
+
+      <privacy></privacy>
+
       <div class="btn">
         <u-button
           text="注册"
