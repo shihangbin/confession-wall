@@ -78,7 +78,9 @@
               },
             })
             .then((res: any) => {
+              console.log(res)
               res = res.data
+
               const { openid } = res.data
 
               uni.setStorageSync('openid', openid)
