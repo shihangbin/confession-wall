@@ -20,67 +20,88 @@
     },
   })
 
+  // const upImages = async (imgArray: any) => {
+  //   uni.showLoading({
+  //     title: '上传中...',
+  //     mask: true,
+  //   })
+  //   // 在一个 async 函数中使用 await
+  //   const uploadImage = (item: any) => {
+  //     const accessToken = uni.getStorageSync('accessToken')
+
+  //     uni.uploadFile({
+  //       url: `https://api.weixin.qq.com/wxa/img_sec_check?access_token=${accessToken}`,
+  //       method: 'POST',
+  //       filePath: item,
+  //       name: 'media', // 服务端接收文件的字段名
+  //       success: (res: any) => {
+  //         const result = JSON.parse(res.data) // 将返回的 JSON 字符串转换为对象
+  //         errcode.value = result.errcode
+  //       },
+  //       fail: (res) => {
+  //         console.error(res)
+  //         uni.hideLoading()
+  //       },
+  //     })
+  //   }
+
+  //   const pushImg = async (item: any) => {
+  //     console.log(errcode.value)
+  //     if (errcode.value !== 0) {
+  //       showToastError('none', '有违规信息')
+  //       return
+  //     }
+  //     const token = uni.getStorageSync('token')
+
+  //     const a = await uni.uploadFile({
+  //       url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
+  //       filePath: item,
+  //       name: 'file',
+  //       header: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     })
+  //     let res = JSON.parse(a.data)
+
+  //     if (res.code == 0 && errcode.value == 0) {
+  //       showToastError('none', '发布成功')
+
+  //       setTimeout(async () => {
+  //         uni.switchTab({
+  //           url: '/pages/index/index',
+  //         })
+  //         uni.hideLoading()
+  //         articleList.value = []
+  //         await articleStore.getArticleListAction(0, 5)
+  //       }, 500)
+  //     }
+  //   }
+
+  //   for (const item of imgArray) {
+  //     imgI.value.push(uploadImage(item), await pushImg(item))
+  //   }
+  // }
+
   const upImages = async (imgArray: any) => {
     uni.showLoading({
       title: '上传中...',
       mask: true,
     })
-    // 在一个 async 函数中使用 await
-    const uploadImage = (item: any) => {
-      const accessToken = uni.getStorageSync('accessToken')
-
-      uni.uploadFile({
-        url: `https://api.weixin.qq.com/wxa/img_sec_check?access_token=${accessToken}`,
-        method: 'POST',
-        filePath: item,
-        name: 'media', // 服务端接收文件的字段名
-        success: (res: any) => {
-          const result = JSON.parse(res.data) // 将返回的 JSON 字符串转换为对象
-          errcode.value = result.errcode
-        },
-        fail: (res) => {
-          console.error(res)
-          uni.hideLoading()
-        },
-      })
-    }
-
-    const pushImg = async (item: any) => {
-      console.log(errcode.value)
-      if (errcode.value !== 0) {
-        showToastError('none', '有违规信息')
-        return
-      }
-      const token = uni.getStorageSync('token')
-
-      const a = await uni.uploadFile({
-        url: 'https://api.xbin.cn/article/images', // 仅为示例，非真实的接口地址
-        filePath: item,
-        name: 'file',
-        header: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      let res = JSON.parse(a.data)
-
-      if (res.code == 0 && errcode.value == 0) {
-        showToastError('none', '发布成功')
-
-        setTimeout(async () => {
-          uni.switchTab({
-            url: '/pages/index/index',
-          })
-          uni.hideLoading()
-          articleList.value = []
-          await articleStore.getArticleListAction(0, 5)
-        }, 500)
-      }
-    }
-
     for (const item of imgArray) {
-      imgI.value.push(uploadImage(item), await pushImg(item))
+      const token = uni.getStorageSync('token')
+      imgI.value.push(
+        await uni.uploadFile({
+          url: 'https://api.xbin.cn/article/images',
+          filePath: item,
+          name: 'file',
+          header: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      )
     }
   }
+
   const publishArticle = async () => {
     const accessToken = uni.getStorageSync('accessToken')
 

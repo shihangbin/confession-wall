@@ -10,6 +10,17 @@
   const fileList: any = ref([])
   const imgArray: any = ref([])
   const imgI: any = ref([])
+  const errcode: any = ref(0)
+
+  const appId = uni.getStorageSync('appId')
+  const secret = uni.getStorageSync('secret')
+
+  uni.request({
+    url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${secret}`,
+    success: (res: any) => {
+      uni.setStorageSync('accessToken', res.data.access_token)
+    },
+  })
 
   const upImages = async (imgArray: any) => {
     uni.showLoading({
@@ -31,6 +42,30 @@
     }
   }
   const publishStudy = async () => {
+    const accessToken = uni.getStorageSync('accessToken')
+
+    uni.request({
+      url: `https://api.weixin.qq.com/wxa/msg_sec_check?access_token=${accessToken}`, // 请确保 accessToken 是有效的
+      method: 'POST',
+      header: {
+        'content-type': 'application/json', // 设置请求头为 JSON
+      },
+      data: {
+        content: content.value,
+      },
+      success: (res: any) => {
+        errcode.value = res.data.errcode
+      },
+      fail: (err) => {
+        console.error('Request failed:', err)
+      },
+    })
+
+    if (errcode.value !== 0) {
+      showToastError('none', '有违规信息')
+      return
+    }
+
     if (content.value.length < 2) {
       showToastError('none', '字数少于二')
       return

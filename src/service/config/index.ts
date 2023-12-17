@@ -4,8 +4,8 @@ if (import.meta.env.PROD) {
   BASE_URL = 'https://api.xbin.cn'
 } else {
   // 开发环境
-  BASE_URL = 'http://localhost:51011'
-  // BASE_URL = 'https://api.xbin.cn'
+  // BASE_URL = 'http://localhost:51011'
+  BASE_URL = 'https://api.xbin.cn'
 }
 
 const TIMEOUT = 10000

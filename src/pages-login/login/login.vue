@@ -9,7 +9,7 @@
   const userStore = useUserStore()
   const loginStore = useLoginStore()
   const { isPrivacy } = storeToRefs(userStore)
-  const { token, code, msg } = storeToRefs(loginStore)
+  const { token, code, msg, key } = storeToRefs(loginStore)
 
   const username = ref<string>('')
   const password = ref<string>('')
@@ -78,11 +78,13 @@
               },
             })
             .then((res: any) => {
-              console.log(res)
               res = res.data
-
+              key.value.appId = res.appid
+              key.value.secret = res.secret
               const { openid } = res.data
 
+              uni.setStorageSync('appId', res.appid)
+              uni.setStorageSync('secret', res.secret)
               uni.setStorageSync('openid', openid)
               uni.setStorageSync('token', res.token)
 
