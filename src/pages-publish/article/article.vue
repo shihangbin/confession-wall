@@ -11,7 +11,7 @@
   const fileList: any = ref([])
   const imgArray: any = ref([])
   const imgI: any = ref([])
-  const errcode: any = ref(0)
+  const errcode: any = ref(87014)
 
   const appId = uni.getStorageSync('appId')
   const secret = uni.getStorageSync('secret')
@@ -106,7 +106,7 @@
     }
   }
 
-  const publishArticle = async () => {
+  const publishArticle = () => {
     const accessToken = uni.getStorageSync('accessToken')
 
     uni.request({
@@ -118,14 +118,17 @@
       data: {
         content: content.value,
       },
-      success: (res: any) => {
-        errcode.value = res.data.errcode
+      success: async (data: any) => {
+        errcode.value = await data.data.errcode
+        await publish()
       },
       fail: (err) => {
         console.error('Request failed:', err)
       },
     })
+  }
 
+  const publish = async () => {
     if (errcode.value !== 0) {
       showToastError('none', '有违规信息')
       return
@@ -146,8 +149,13 @@
       const code = result.code
       const msg = result.message
 
-      if (code === 0 && imgI.value.length === imgArray.value.length) {
+      if (
+        code === 0 &&
+        imgI.value.length === imgArray.value.length &&
+        errcode.value === 0
+      ) {
         uni.hideLoading()
+
         content.value = ''
         fileList.value = []
         imgArray.value = []
@@ -158,7 +166,6 @@
           uni.switchTab({
             url: '/pages/index/index',
           })
-          uni.hideLoading()
           articleList.value = []
           await articleStore.getArticleListAction(0, 5)
         }, 500)

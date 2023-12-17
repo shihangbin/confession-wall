@@ -10,7 +10,7 @@
   const fileList: any = ref([])
   const imgArray: any = ref([])
   const imgI: any = ref([])
-  const errcode: any = ref(0)
+  const errcode: any = ref(87014)
 
   const appId = uni.getStorageSync('appId')
   const secret = uni.getStorageSync('secret')
@@ -42,7 +42,7 @@
       )
     }
   }
-  const publishStudy = async () => {
+  const publishStudy = () => {
     const accessToken = uni.getStorageSync('accessToken')
 
     uni.request({
@@ -54,21 +54,24 @@
       data: {
         content: content.value,
       },
-      success: (res: any) => {
-        errcode.value = res.data.errcode
+      success: async (data: any) => {
+        errcode.value = await data.data.errcode
+        await publish()
       },
       fail: (err) => {
         console.error('Request failed:', err)
       },
     })
+  }
 
-    if (errcode.value !== 0) {
-      showToastError('none', '有违规信息')
+  const publish = async () => {
+    if (content.value.length < 2) {
+      showToastError('none', '字数少于二')
       return
     }
 
-    if (content.value.length < 2) {
-      showToastError('none', '字数少于二')
+    if (errcode.value !== 0) {
+      showToastError('none', '有违规信息')
       return
     }
 
