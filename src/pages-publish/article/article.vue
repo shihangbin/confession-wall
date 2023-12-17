@@ -91,10 +91,11 @@
       title: '上传中...',
       mask: true,
     })
-    for (const item of imgArray) {
-      const token = uni.getStorageSync('token')
-      imgI.value.push(
-        await uni.uploadFile({
+
+    const token = uni.getStorageSync('token')
+    try {
+      for (const item of imgArray) {
+        const response = await uni.uploadFile({
           url: 'https://api.xbin.cn/article/images',
           filePath: item,
           name: 'file',
@@ -102,7 +103,18 @@
             Authorization: `Bearer ${token}`,
           },
         })
-      )
+        if (response.statusCode !== 200) {
+          throw new Error(
+            `Image upload failed with status code: ${response.statusCode}`
+          )
+        }
+        imgI.value.push(response.data) // 存储上传结果而不是 Promise 对象
+      }
+    } catch (error) {
+      console.error('Image upload error:', error)
+      showToastError('none', '图片上传失败')
+    } finally {
+      uni.hideLoading()
     }
   }
 
@@ -124,52 +136,54 @@
       },
       fail: (err) => {
         console.error('Request failed:', err)
+        uni.hideLoading()
+        showToastError('none', '请求失败，请重试') // 添加错误提示
       },
     })
   }
 
   const publish = async () => {
-    if (errcode.value !== 0) {
-      showToastError('none', '有违规信息')
-      return
-    }
+    try {
+      if (content.value.length < 2) {
+        showToastError('none', '字数少于二')
+        return
+      }
 
-    if (content.value.length < 2) {
-      showToastError('none', '字数少于二')
-      return
-    }
+      if (errcode.value !== 0) {
+        showToastError('none', '有违规信息')
+        return
+      }
 
-    const res: any = await upImages(imgArray.value)
-
-    if (
-      typeof res === 'undefined' ||
-      imgI.value.length === imgArray.value.length
-    ) {
-      const result = await articleStore.postArticlePublish(content.value, 1)
-      const code = result.code
-      const msg = result.message
+      const res: any = await upImages(imgArray.value)
 
       if (
-        code === 0 &&
-        imgI.value.length === imgArray.value.length &&
-        errcode.value === 0
+        typeof res === 'undefined' ||
+        imgI.value.length === imgArray.value.length
       ) {
-        uni.hideLoading()
+        const result = await articleStore.postArticlePublish(content.value, 1)
+        const code = result.code
+        const msg = result.message
 
-        content.value = ''
-        fileList.value = []
-        imgArray.value = []
+        if (code === 0 && imgI.value.length === imgArray.value.length) {
+          uni.hideLoading()
 
-        showToastError('none', msg)
+          content.value = ''
+          fileList.value = []
+          imgArray.value = []
 
-        setTimeout(async () => {
-          uni.switchTab({
-            url: '/pages/index/index',
-          })
-          articleList.value = []
-          await articleStore.getArticleListAction(0, 5)
-        }, 500)
+          showToastError('none', msg)
+
+          setTimeout(async () => {
+            uni.switchTab({
+              url: '/pages/index/index',
+            })
+            articleList.value = []
+            await articleStore.getArticleListAction(0, 5)
+          }, 500)
+        }
       }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -179,7 +193,11 @@
   }
   // 获取上传进度
   const remove = (e: any) => {
-    imgArray.value.splice(imgArray.value.indexOf(e.tempFilePath), 1)
+    // imgArray.value.splice(imgArray.value.indexOf(e.tempFilePath), 1)
+    const index = imgArray.value.indexOf(e.tempFilePath)
+    if (index !== -1) {
+      imgArray.value.splice(index, 1)
+    }
   }
 </script>
 

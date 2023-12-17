@@ -70,13 +70,13 @@
       return
     }
 
-    if (errcode.value !== 0) {
-      showToastError('none', '有违规信息')
+    if (imgArray.value.length === 0) {
+      showToastError('none', '必须包含图片')
       return
     }
 
-    if (imgArray.value.length === 0) {
-      showToastError('none', '必须包含图片')
+    if (errcode.value !== 0) {
+      showToastError('none', '有违规信息')
       return
     }
 
