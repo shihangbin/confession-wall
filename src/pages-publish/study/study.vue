@@ -17,6 +17,7 @@
 
   uni.request({
     url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${secret}`,
+    method: 'POST',
     success: (res: any) => {
       uni.setStorageSync('accessToken', res.data.access_token)
     },

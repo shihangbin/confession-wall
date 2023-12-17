@@ -13,8 +13,12 @@
   const imgI: any = ref([])
   const errcode: any = ref(0)
 
+  const appId = uni.getStorageSync('appId')
+  const secret = uni.getStorageSync('secret')
+
   uni.request({
-    url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wxb4609bd47f86f85d&secret=a8335f08c978c7890fc9a099b1c616de`,
+    url: `https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=${appId}&secret=${secret}`,
+    method: 'POST',
     success: (res: any) => {
       uni.setStorageSync('accessToken', res.data.access_token)
     },
